@@ -14,7 +14,12 @@ const NoteEditPage = () => {
       navigate(`/note/${note.id}`);
     } else {
       console.error('Note ID is missing:', note);
-      navigate('/dashboard');
+      // If we're editing an existing note, navigate back to it
+      if (!isNewNote && id) {
+        navigate(`/note/${id}`);
+      } else {
+        navigate('/dashboard');
+      }
     }
   };
 
