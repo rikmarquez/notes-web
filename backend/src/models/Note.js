@@ -64,10 +64,10 @@ class Note {
     const query = `
       UPDATE notes 
       SET title = $1, summary = $2, content = $3, tags = $4, images = $5, updated_at = CURRENT_TIMESTAMP
-      WHERE id = $6 AND user_id = $7
+      WHERE id = $6
       RETURNING *
     `;
-    const values = [title, summary, content, tags || [], images, id, userId];
+    const values = [title, summary, content, tags || [], images, id];
     console.log('Note.update query:', { query, values }); // Debug log
     const result = await db.query(query, values);
     console.log('Note.update result:', { rowCount: result.rowCount, rows: result.rows }); // Debug log
