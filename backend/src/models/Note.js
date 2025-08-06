@@ -68,7 +68,9 @@ class Note {
       RETURNING *
     `;
     const values = [title, summary, content, tags || [], images, id, userId];
+    console.log('Note.update query:', { query, values }); // Debug log
     const result = await db.query(query, values);
+    console.log('Note.update result:', { rowCount: result.rowCount, rows: result.rows }); // Debug log
     return result.rows[0];
   }
 
