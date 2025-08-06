@@ -102,15 +102,17 @@ const notesController = {
         });
       }
 
-      const updatedNote = await Note.update(id, userId, {
+      const updateData = {
         title: title ?? existingNote.title,
         summary: summary ?? existingNote.summary,
         content: content ?? existingNote.content,
         tags: tags ? tags.map(tag => tag.toLowerCase().trim()) : existingNote.tags,
         images: images ?? existingNote.images
-      });
+      };
 
-      console.log('Updated note:', updatedNote); // Debug log
+      console.log('Update params:', { id, userId, updateData }); // Debug log
+      const updatedNote = await Note.update(id, userId, updateData);
+      console.log('Updated note result:', updatedNote); // Debug log
 
       res.json({
         success: true,
