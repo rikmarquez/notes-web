@@ -110,6 +110,8 @@ const notesController = {
         images: images ?? existingNote.images
       });
 
+      console.log('Updated note:', updatedNote); // Debug log
+
       res.json({
         success: true,
         message: 'Note updated successfully',

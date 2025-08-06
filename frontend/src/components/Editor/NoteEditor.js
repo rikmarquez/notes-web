@@ -119,6 +119,7 @@ const NoteEditor = ({ noteId, onSave, onCancel }) => {
       }
 
       if (response.success) {
+        console.log('Update response:', response); // Debug log
         setSaved(true);
         if (onSave) {
           onSave(response.data.note);

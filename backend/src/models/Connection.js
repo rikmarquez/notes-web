@@ -35,7 +35,7 @@ class Connection {
       WHERE (c.source_note_id = $1 OR c.target_note_id = $1)
       ORDER BY c.created_at DESC
     `;
-    const result = await db.query(query, [parseInt(noteId) || noteId]);
+    const result = await db.query(query, [noteId]);
     return result.rows;
   }
 
