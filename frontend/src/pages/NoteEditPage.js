@@ -9,7 +9,13 @@ const NoteEditPage = () => {
   const isNewNote = !id || id === 'new';
 
   const handleSave = (note) => {
-    navigate(`/note/${note.id}`);
+    console.log('Note saved:', note); // Debug log
+    if (note && note.id) {
+      navigate(`/note/${note.id}`);
+    } else {
+      console.error('Note ID is missing:', note);
+      navigate('/dashboard');
+    }
   };
 
   const handleCancel = () => {
