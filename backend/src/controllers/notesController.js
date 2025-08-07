@@ -64,6 +64,13 @@ const notesController = {
     try {
       const { id } = req.params;
 
+      // DEBUG: Log what we're receiving
+      console.log('=== DEBUG getNote ===');
+      console.log('Received ID:', id);
+      console.log('ID type:', typeof id);
+      console.log('ID length:', id ? id.length : 'null/undefined');
+      console.log('ID toString():', id ? id.toString() : 'null/undefined');
+
       // Basic ID validation
       if (!id) {
         return res.status(400).json({

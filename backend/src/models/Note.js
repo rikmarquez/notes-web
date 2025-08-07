@@ -25,11 +25,21 @@ class Note {
   }
 
   static async findById(id) {
+    // DEBUG: Log what we're receiving in the model
+    console.log('=== DEBUG Note.findById ===');
+    console.log('Received ID in model:', id);
+    console.log('ID type in model:', typeof id);
+    console.log('parseInt(id, 10):', parseInt(id, 10));
+    console.log('isNaN(parseInt(id, 10)):', isNaN(parseInt(id, 10)));
+    
     // Validate and convert ID safely - accept string numbers and integers
     const noteId = parseInt(id, 10);
     if (isNaN(noteId) || noteId <= 0) {
+      console.log('VALIDATION FAILED - noteId:', noteId, 'isNaN:', isNaN(noteId), 'noteId <= 0:', noteId <= 0);
       throw new Error('Invalid note ID provided');
     }
+    
+    console.log('VALIDATION PASSED - noteId:', noteId);
     
     const query = `
       SELECT n.*, u.name as author_name, u.email as author_email 
