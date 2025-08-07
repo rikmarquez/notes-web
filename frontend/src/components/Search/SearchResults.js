@@ -45,9 +45,14 @@ const SearchResults = ({ searchQuery, onNoteClick, onClose }) => {
     }
   };
 
-  // Close results when clicking outside
+  // Close results when clicking outside (but not on notes)
   useEffect(() => {
     const handleClickOutside = (e) => {
+      // Don't close if clicking on a search result note
+      if (e.target.closest('.search-result-note')) {
+        return;
+      }
+      
       if (!e.target.closest('.search-results') && !e.target.closest('.search-container')) {
         onClose();
       }
@@ -119,7 +124,7 @@ const SearchResults = ({ searchQuery, onNoteClick, onClose }) => {
         {results.map((note) => (
           <div
             key={note.id}
-            className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 cursor-pointer hover:shadow-md transition-shadow group"
+            className="search-result-note bg-white rounded-lg shadow-sm border border-gray-200 p-4 cursor-pointer hover:shadow-md transition-shadow group"
             onClick={() => handleResultClick(note)}
           >
             <div className="flex flex-col h-full">
