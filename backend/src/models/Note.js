@@ -25,13 +25,19 @@ class Note {
   }
 
   static async findById(id) {
+    // Validate and convert ID safely
+    const noteId = parseInt(id);
+    if (isNaN(noteId)) {
+      throw new Error('Invalid note ID provided');
+    }
+    
     const query = `
       SELECT n.*, u.name as author_name, u.email as author_email 
       FROM notes n
       LEFT JOIN users u ON n.user_id = u.id
       WHERE n.id = $1
     `;
-    const result = await db.query(query, [parseInt(id)]);
+    const result = await db.query(query, [noteId]);
     return result.rows[0];
   }
 
@@ -61,20 +67,29 @@ class Note {
   }
 
   static async update(id, { title, summary, content, tags, images }) {
+    // Validate and convert ID safely
+    const noteId = parseInt(id);
+    if (isNaN(noteId)) {
+      throw new Error('Invalid note ID provided');
+    }
+    
     const query = `
       UPDATE notes 
       SET title = $1, summary = $2, content = $3, tags = $4, images = $5, updated_at = CURRENT_TIMESTAMP
       WHERE id = $6
       RETURNING *
     `;
-    const values = [title, summary, content, tags || [], images, parseInt(id)];
+    const values = [title, summary, content, tags || [], images, noteId];
     const result = await db.query(query, values);
     return result.rows[0];
   }
 
   static async delete(id) {
-    // Convert to integer to handle type inconsistencies
+    // Validate and convert ID safely
     const noteId = parseInt(id);
+    if (isNaN(noteId)) {
+      throw new Error('Invalid note ID provided');
+    }
     
     const query = 'DELETE FROM notes WHERE id = $1 RETURNING *';
     const result = await db.query(query, [noteId]);

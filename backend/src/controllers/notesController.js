@@ -64,6 +64,14 @@ const notesController = {
     try {
       const { id } = req.params;
 
+      // Validate ID parameter
+      if (!id || id.trim() === '') {
+        return res.status(400).json({
+          success: false,
+          message: 'Note ID is required'
+        });
+      }
+
       // Cualquier usuario puede ver cualquier nota
       const note = await Note.findById(id);
       
@@ -81,6 +89,15 @@ const notesController = {
 
     } catch (error) {
       console.error('Get note error:', error);
+      
+      // More specific error handling
+      if (error.message === 'Invalid note ID provided') {
+        return res.status(400).json({
+          success: false,
+          message: 'Invalid note ID format'
+        });
+      }
+      
       res.status(500).json({
         success: false,
         message: 'Internal server error'
