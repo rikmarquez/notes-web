@@ -63,6 +63,10 @@ export const useAuth = () => {
       
       if (result.success) {
         setUser(result.data.user);
+        // Force redirect to dashboard after successful registration
+        setTimeout(() => {
+          window.location.href = '/dashboard';
+        }, 100);
         return result;
       } else {
         setError(result.message);
