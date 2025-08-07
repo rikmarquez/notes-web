@@ -67,25 +67,23 @@ const DashboardPage = () => {
         
         <main className="flex-1 overflow-auto">
           <div className="container py-6">
-            {/* Search Results Dropdown */}
-            {showSearchResults && debouncedSearchQuery && (
-              <div className="mb-6">
-                <SearchResults 
-                  searchQuery={debouncedSearchQuery}
-                  onNoteClick={handleNoteClick}
-                  onClose={() => setShowSearchResults(false)}
-                />
-              </div>
+            {/* Search Results - replace recent notes when searching */}
+            {showSearchResults && debouncedSearchQuery ? (
+              <SearchResults 
+                searchQuery={debouncedSearchQuery}
+                onNoteClick={handleNoteClick}
+                onClose={() => setShowSearchResults(false)}
+              />
+            ) : (
+              /* Notes List - show recent notes when not searching */
+              <NotesList
+                searchQuery={''}
+                selectedTag={selectedTag}
+                onNoteClick={handleNoteClick}
+                onEditNote={handleEditNote}
+                refreshTrigger={refreshTrigger}
+              />
             )}
-
-            {/* Notes List */}
-            <NotesList
-              searchQuery={showSearchResults ? '' : debouncedSearchQuery}
-              selectedTag={selectedTag}
-              onNoteClick={handleNoteClick}
-              onEditNote={handleEditNote}
-              refreshTrigger={refreshTrigger}
-            />
           </div>
         </main>
       </div>

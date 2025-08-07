@@ -67,99 +67,126 @@ const SearchResults = ({ searchQuery, onNoteClick, onClose }) => {
     return null;
   }
 
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <div className="flex items-center gap-2">
+          <div className="spinner"></div>
+          <span>Buscando...</span>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="alert alert-error">
+        <div className="flex items-center gap-2">
+          <span>❌</span>
+          <span>{error}</span>
+        </div>
+      </div>
+    );
+  }
+
+  if (results.length === 0) {
+    return (
+      <div className="text-center py-12">
+        <div className="text-6xl mb-4">🔍</div>
+        <h3 className="text-xl font-semibold text-gray-700 mb-2">
+          No se encontraron resultados
+        </h3>
+        <p className="text-gray-500 mb-6">
+          No se encontraron notas para "{searchQuery}". Intenta con otros términos de búsqueda.
+        </p>
+      </div>
+    );
+  }
+
   return (
-    <div className="search-results">
-      {loading && (
-        <div className="search-result-item text-center">
-          <div className="flex items-center justify-center gap-2">
-            <div className="spinner"></div>
-            <span>Buscando...</span>
-          </div>
-        </div>
-      )}
+    <div>
+      {/* Results header */}
+      <div className="mb-6">
+        <h2 className="text-xl font-semibold text-gray-900">
+          Resultados de búsqueda para "{searchQuery}"
+        </h2>
+        <p className="text-gray-600">
+          {results.length} {results.length === 1 ? 'nota encontrada' : 'notas encontradas'}
+        </p>
+      </div>
 
-      {error && (
-        <div className="search-result-item text-red-600">
-          <div className="flex items-center gap-2">
-            <span>❌</span>
-            <span>{error}</span>
-          </div>
-        </div>
-      )}
-
-      {!loading && !error && results.length === 0 && (
-        <div className="search-result-item text-gray-500">
-          <div className="flex items-center gap-2">
-            <span>🔍</span>
-            <span>No se encontraron resultados para "{searchQuery}"</span>
-          </div>
-        </div>
-      )}
-
-      {!loading && !error && results.length > 0 && (
-        <>
-          <div className="search-result-item border-b-2 border-gray-200 font-semibold text-gray-700">
-            {results.length} resultado{results.length !== 1 ? 's' : ''} encontrado{results.length !== 1 ? 's' : ''}
-          </div>
-          
-          {results.map((note) => (
-            <div
-              key={note.id}
-              className="search-result-item"
-              onClick={() => handleResultClick(note)}
-            >
-              <div className="flex flex-col">
-                {/* Title */}
-                <h4 
-                  className="font-semibold text-gray-900 mb-1"
-                  dangerouslySetInnerHTML={{
-                    __html: highlightSearchTerm(note.title, searchQuery)
-                  }}
-                />
-                
-                {/* Content preview */}
-                <p 
-                  className="text-gray-600 text-sm mb-2"
-                  dangerouslySetInnerHTML={{
-                    __html: highlightSearchTerm(
-                      getTextPreview(note.summary || note.content, 100), 
-                      searchQuery
-                    )
-                  }}
-                />
-                
-                {/* Tags */}
-                {note.tags && note.tags.length > 0 && (
-                  <div className="flex flex-wrap gap-1">
-                    {note.tags.slice(0, 3).map((tag, index) => (
-                      <span 
-                        key={index} 
-                        className={`tag text-xs ${
-                          tag.toLowerCase().includes(searchQuery.toLowerCase()) 
-                            ? 'bg-yellow-200 text-yellow-800' 
-                            : ''
-                        }`}
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                    {note.tags.length > 3 && (
-                      <span className="text-xs text-gray-500">
-                        +{note.tags.length - 3}
-                      </span>
-                    )}
-                  </div>
-                )}
-              </div>
+      {/* Results grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {results.map((note) => (
+          <div
+            key={note.id}
+            className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 cursor-pointer hover:shadow-md transition-shadow group"
+            onClick={() => handleResultClick(note)}
+          >
+            <div className="flex flex-col h-full">
+              {/* Title */}
+              <h4 
+                className="font-semibold text-gray-900 mb-2 line-clamp-2"
+                dangerouslySetInnerHTML={{
+                  __html: highlightSearchTerm(note.title, searchQuery)
+                }}
+              />
+              
+              {/* Content preview */}
+              <p 
+                className="text-gray-600 text-sm mb-3 flex-grow line-clamp-3"
+                dangerouslySetInnerHTML={{
+                  __html: highlightSearchTerm(
+                    getTextPreview(note.summary || note.content, 120), 
+                    searchQuery
+                  )
+                }}
+              />
+              
+              {/* Tags */}
+              {note.tags && note.tags.length > 0 && (
+                <div className="flex flex-wrap gap-1 mt-auto">
+                  {note.tags.slice(0, 3).map((tag, index) => (
+                    <span 
+                      key={index} 
+                      className={`inline-block px-2 py-1 text-xs rounded-full ${
+                        tag.toLowerCase().includes(searchQuery.toLowerCase()) 
+                          ? 'bg-yellow-200 text-yellow-800' 
+                          : 'bg-gray-100 text-gray-600'
+                      }`}
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                  {note.tags.length > 3 && (
+                    <span className="text-xs text-gray-500 px-2 py-1">
+                      +{note.tags.length - 3}
+                    </span>
+                  )}
+                </div>
+              )}
+              
+              {/* Date */}
+              {note.updated_at && (
+                <div className="text-xs text-gray-400 mt-2">
+                  {new Date(note.updated_at).toLocaleDateString('es-ES', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric'
+                  })}
+                </div>
+              )}
             </div>
-          ))}
-          
-          {results.length >= 20 && (
-            <div className="search-result-item text-center text-gray-500 text-sm">
-              Se muestran los primeros 20 resultados. Refina tu búsqueda para resultados más específicos.
-            </div>
-          )}
-        </>
+          </div>
+        ))}
+      </div>
+      
+      {results.length >= 20 && (
+        <div className="text-center mt-8 p-4 bg-gray-50 rounded-lg">
+          <p className="text-gray-600 text-sm">
+            Se muestran los primeros 20 resultados. Refina tu búsqueda para resultados más específicos.
+          </p>
+        </div>
       )}
     </div>
   );
