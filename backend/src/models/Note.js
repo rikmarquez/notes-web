@@ -34,8 +34,8 @@ class Note {
     
     // Validate and convert ID safely - accept string numbers and integers
     const noteId = parseInt(id, 10);
-    if (isNaN(noteId) || noteId <= 0) {
-      console.log('VALIDATION FAILED - noteId:', noteId, 'isNaN:', isNaN(noteId), 'noteId <= 0:', noteId <= 0);
+    if (isNaN(noteId)) {
+      console.log('VALIDATION FAILED - noteId:', noteId, 'isNaN:', isNaN(noteId));
       throw new Error('Invalid note ID provided');
     }
     
@@ -79,7 +79,7 @@ class Note {
   static async update(id, { title, summary, content, tags, images }) {
     // Validate and convert ID safely - accept string numbers and integers
     const noteId = parseInt(id, 10);
-    if (isNaN(noteId) || noteId <= 0) {
+    if (isNaN(noteId)) {
       throw new Error('Invalid note ID provided');
     }
     
@@ -97,7 +97,7 @@ class Note {
   static async delete(id) {
     // Validate and convert ID safely - accept string numbers and integers
     const noteId = parseInt(id, 10);
-    if (isNaN(noteId) || noteId <= 0) {
+    if (isNaN(noteId)) {
       throw new Error('Invalid note ID provided');
     }
     
