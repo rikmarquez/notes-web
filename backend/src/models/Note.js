@@ -25,21 +25,18 @@ class Note {
   }
 
   static async findById(id) {
-    // DEBUG: Log what we're receiving in the model
-    console.log('=== DEBUG Note.findById ===');
-    console.log('Received ID in model:', id);
-    console.log('ID type in model:', typeof id);
-    console.log('parseInt(id, 10):', parseInt(id, 10));
-    console.log('isNaN(parseInt(id, 10)):', isNaN(parseInt(id, 10)));
-    
-    // Validate and convert ID safely - accept string numbers and integers
-    const noteId = parseInt(id, 10);
-    if (isNaN(noteId)) {
-      console.log('VALIDATION FAILED - noteId:', noteId, 'isNaN:', isNaN(noteId));
+    // Validate ID - accept UUIDs and integer strings
+    if (!id || (typeof id !== 'string' && typeof id !== 'number')) {
       throw new Error('Invalid note ID provided');
     }
     
-    console.log('VALIDATION PASSED - noteId:', noteId);
+    // Convert to string for consistency
+    const noteId = id.toString().trim();
+    
+    // Basic validation - not empty after trim
+    if (noteId === '') {
+      throw new Error('Invalid note ID provided');
+    }
     
     const query = `
       SELECT n.*, u.name as author_name, u.email as author_email 
@@ -77,9 +74,13 @@ class Note {
   }
 
   static async update(id, { title, summary, content, tags, images }) {
-    // Validate and convert ID safely - accept string numbers and integers
-    const noteId = parseInt(id, 10);
-    if (isNaN(noteId)) {
+    // Validate ID - accept UUIDs and integer strings
+    if (!id || (typeof id !== 'string' && typeof id !== 'number')) {
+      throw new Error('Invalid note ID provided');
+    }
+    
+    const noteId = id.toString().trim();
+    if (noteId === '') {
       throw new Error('Invalid note ID provided');
     }
     
@@ -95,9 +96,13 @@ class Note {
   }
 
   static async delete(id) {
-    // Validate and convert ID safely - accept string numbers and integers
-    const noteId = parseInt(id, 10);
-    if (isNaN(noteId)) {
+    // Validate ID - accept UUIDs and integer strings
+    if (!id || (typeof id !== 'string' && typeof id !== 'number')) {
+      throw new Error('Invalid note ID provided');
+    }
+    
+    const noteId = id.toString().trim();
+    if (noteId === '') {
       throw new Error('Invalid note ID provided');
     }
     
