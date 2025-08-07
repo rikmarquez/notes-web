@@ -31,7 +31,7 @@ class Note {
       LEFT JOIN users u ON n.user_id = u.id
       WHERE n.id = $1
     `;
-    const result = await db.query(query, [id]);
+    const result = await db.query(query, [parseInt(id)]);
     return result.rows[0];
   }
 
@@ -60,23 +60,24 @@ class Note {
     return result.rows;
   }
 
-  static async update(id, userId, { title, summary, content, tags, images }) {
+  static async update(id, { title, summary, content, tags, images }) {
     const query = `
       UPDATE notes 
       SET title = $1, summary = $2, content = $3, tags = $4, images = $5, updated_at = CURRENT_TIMESTAMP
       WHERE id = $6
       RETURNING *
     `;
-    const values = [title, summary, content, tags || [], images, id];
-    console.log('Note.update query:', { query, values }); // Debug log
+    const values = [title, summary, content, tags || [], images, parseInt(id)];
     const result = await db.query(query, values);
-    console.log('Note.update result:', { rowCount: result.rowCount, rows: result.rows }); // Debug log
     return result.rows[0];
   }
 
-  static async delete(id, userId) {
-    const query = 'DELETE FROM notes WHERE id = $1 AND user_id = $2 RETURNING *';
-    const result = await db.query(query, [id, userId]);
+  static async delete(id) {
+    // Convert to integer to handle type inconsistencies
+    const noteId = parseInt(id);
+    
+    const query = 'DELETE FROM notes WHERE id = $1 RETURNING *';
+    const result = await db.query(query, [noteId]);
     return result.rows[0];
   }
 

@@ -94,13 +94,15 @@ const notesController = {
       const { title, summary, content, tags, images } = req.body;
       const userId = req.user.id;
 
-      const existingNote = await Note.findById(id, userId);
+      const existingNote = await Note.findById(id);
       if (!existingNote) {
         return res.status(404).json({
           success: false,
           message: 'Note not found'
         });
       }
+
+      // Allow any authenticated user to edit any note (collaborative knowledge base)
 
       const updateData = {
         title: title ?? existingNote.title,
@@ -110,9 +112,14 @@ const notesController = {
         images: images ?? existingNote.images
       };
 
-      console.log('Update params:', { id, userId, updateData }); // Debug log
-      const updatedNote = await Note.update(id, userId, updateData);
-      console.log('Updated note result:', updatedNote); // Debug log
+      const updatedNote = await Note.update(id, updateData);
+      
+      if (!updatedNote) {
+        return res.status(404).json({
+          success: false,
+          message: 'Note not found or not authorized'
+        });
+      }
 
       res.json({
         success: true,
@@ -132,9 +139,8 @@ const notesController = {
   async deleteNote(req, res) {
     try {
       const { id } = req.params;
-      const userId = req.user.id;
 
-      const deletedNote = await Note.delete(id, userId);
+      const deletedNote = await Note.delete(id);
       
       if (!deletedNote) {
         return res.status(404).json({

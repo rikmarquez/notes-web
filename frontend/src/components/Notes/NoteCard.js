@@ -24,7 +24,9 @@ const NoteCard = ({ note, onClick, onEdit, onDelete }) => {
     }
   };
 
-  const isOwnNote = user && note.user_id === user.id;
+  // Allow all authenticated users to edit and delete any note (collaborative knowledge base)
+  const canEdit = !!user; // Any authenticated user can edit
+  const canDelete = !!user; // Any authenticated user can delete
 
   return (
     <div 
@@ -37,22 +39,26 @@ const NoteCard = ({ note, onClick, onEdit, onDelete }) => {
           <h3 className="text-lg font-semibold text-gray-900 line-clamp-2">
             {note.title}
           </h3>
-          {isOwnNote && (
+          {(canEdit || canDelete) && (
             <div className="note-actions flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-              <button
-                onClick={handleEdit}
-                className="text-gray-500 hover:text-blue-600 p-1"
-                title="Editar nota"
-              >
-                ✏️
-              </button>
-              <button
-                onClick={handleDelete}
-                className="text-gray-500 hover:text-red-600 p-1"
-                title="Eliminar nota"
-              >
-                🗑️
-              </button>
+              {canEdit && (
+                <button
+                  onClick={handleEdit}
+                  className="text-gray-500 hover:text-blue-600 p-1"
+                  title="Editar nota"
+                >
+                  ✏️
+                </button>
+              )}
+              {canDelete && (
+                <button
+                  onClick={handleDelete}
+                  className="text-gray-500 hover:text-red-600 p-1"
+                  title="Eliminar nota"
+                >
+                  🗑️
+                </button>
+              )}
             </div>
           )}
         </div>
