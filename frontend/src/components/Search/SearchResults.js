@@ -37,7 +37,6 @@ const SearchResults = ({ searchQuery, onNoteClick, onClose }) => {
 
   const handleResultClick = (note) => {
     onNoteClick(note);
-    onClose();
   };
 
   const handleKeyDown = (e) => {
