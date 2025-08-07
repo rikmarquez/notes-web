@@ -25,9 +25,9 @@ class Note {
   }
 
   static async findById(id) {
-    // Validate and convert ID safely
-    const noteId = parseInt(id);
-    if (isNaN(noteId)) {
+    // Validate and convert ID safely - accept string numbers and integers
+    const noteId = parseInt(id, 10);
+    if (isNaN(noteId) || noteId <= 0) {
       throw new Error('Invalid note ID provided');
     }
     
@@ -67,9 +67,9 @@ class Note {
   }
 
   static async update(id, { title, summary, content, tags, images }) {
-    // Validate and convert ID safely
-    const noteId = parseInt(id);
-    if (isNaN(noteId)) {
+    // Validate and convert ID safely - accept string numbers and integers
+    const noteId = parseInt(id, 10);
+    if (isNaN(noteId) || noteId <= 0) {
       throw new Error('Invalid note ID provided');
     }
     
@@ -85,9 +85,9 @@ class Note {
   }
 
   static async delete(id) {
-    // Validate and convert ID safely
-    const noteId = parseInt(id);
-    if (isNaN(noteId)) {
+    // Validate and convert ID safely - accept string numbers and integers
+    const noteId = parseInt(id, 10);
+    if (isNaN(noteId) || noteId <= 0) {
       throw new Error('Invalid note ID provided');
     }
     

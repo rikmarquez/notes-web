@@ -64,8 +64,8 @@ const notesController = {
     try {
       const { id } = req.params;
 
-      // Validate ID parameter
-      if (!id || id.trim() === '') {
+      // Basic ID validation
+      if (!id) {
         return res.status(400).json({
           success: false,
           message: 'Note ID is required'
