@@ -241,6 +241,76 @@ const notesController = {
         message: 'Internal server error'
       });
     }
+  },
+
+  async importNotes(req, res) {
+    try {
+      const { notes } = req.body;
+      const userId = req.user.id;
+
+      if (!Array.isArray(notes)) {
+        return res.status(400).json({
+          success: false,
+          message: 'Invalid format. Expected an array of notes.'
+        });
+      }
+
+      const results = {
+        total: notes.length,
+        imported: 0,
+        failed: 0,
+        errors: []
+      };
+
+      // Process notes in batches to avoid overwhelming the database
+      for (let i = 0; i < notes.length; i++) {
+        const noteData = notes[i];
+        
+        try {
+          // Validate required fields
+          if (!noteData.title || typeof noteData.title !== 'string') {
+            throw new Error(`Note ${i + 1}: Title is required and must be a string`);
+          }
+
+          // Map your fields to our database structure
+          const mappedNote = {
+            userId,
+            title: noteData.title.trim(),
+            summary: noteData.summary?.trim() || null, // Your TAG field
+            content: noteData.content?.trim() || null,  // Your NOTA field
+            tags: [], // Empty array for now, can add later if needed
+            images: null
+          };
+
+          await Note.create(mappedNote);
+          results.imported++;
+
+        } catch (error) {
+          results.failed++;
+          results.errors.push({
+            note: i + 1,
+            title: noteData.title || 'Unknown',
+            error: error.message
+          });
+          
+          // Continue processing other notes even if one fails
+          console.error(`Import error for note ${i + 1}:`, error.message);
+        }
+      }
+
+      res.status(200).json({
+        success: true,
+        message: `Import completed. ${results.imported} notes imported successfully, ${results.failed} failed.`,
+        data: results
+      });
+
+    } catch (error) {
+      console.error('Import notes error:', error);
+      res.status(500).json({
+        success: false,
+        message: 'Internal server error during import'
+      });
+    }
   }
 };
 

@@ -1,0 +1,19 @@
+{
+  "notes": [
+    {
+      "title": "Guía de Desarrollo Web",
+      "summary": "Frontend",
+      "content": "<h1>Desarrollo Frontend Moderno</h1><p>El desarrollo frontend ha evolucionado significativamente en los últimos años.</p><h2>Tecnologías Principales</h2><ul><li><strong>React</strong> - Biblioteca para interfaces de usuario</li><li><strong>Vue.js</strong> - Framework progresivo</li><li><strong>Angular</strong> - Plataforma completa</li></ul><h3>Mejores Prácticas</h3><ol><li><em>Componentización</em>: Divide tu UI en componentes reutilizables</li><li><em>Estado centralizado</em>: Usa Redux, Vuex o similar</li><li><em>Testing</em>: Pruebas unitarias y de integración</li></ol><blockquote><p>\"La simplicidad es la sofisticación definitiva\" - Leonardo da Vinci</p></blockquote><p>Para más información, consulta la <a href='#'>documentación oficial</a>.</p>"
+    },
+    {
+      "title": "Arquitectura de Software",
+      "summary": "Backend",
+      "content": "<div style='background-color: #f0f0f0; padding: 15px; border-left: 4px solid #007acc;'><h2 style='color: #007acc; margin-top: 0;'>Principios SOLID</h2><p><strong style='font-size: 18px;'>S</strong> - Single Responsibility Principle<br><strong style='font-size: 18px;'>O</strong> - Open/Closed Principle<br><strong style='font-size: 18px;'>L</strong> - Liskov Substitution Principle<br><strong style='font-size: 18px;'>I</strong> - Interface Segregation Principle<br><strong style='font-size: 18px;'>D</strong> - Dependency Inversion Principle</p></div><h3>Patrones de Diseño Comunes</h3><table border='1' style='width: 100%; border-collapse: collapse;'><tr style='background-color: #007acc; color: white;'><th style='padding: 10px;'>Patrón</th><th style='padding: 10px;'>Uso</th><th style='padding: 10px;'>Ejemplo</th></tr><tr><td style='padding: 8px;'><strong>Singleton</strong></td><td style='padding: 8px;'>Una sola instancia</td><td style='padding: 8px;'>Database Connection</td></tr><tr style='background-color: #f9f9f9;'><td style='padding: 8px;'><strong>Factory</strong></td><td style='padding: 8px;'>Crear objetos</td><td style='padding: 8px;'>User Factory</td></tr><tr><td style='padding: 8px;'><strong>Observer</strong></td><td style='padding: 8px;'>Notificaciones</td><td style='padding: 8px;'>Event System</td></tr></table>"
+    },
+    {
+      "title": "Comandos Git Esenciales",
+      "summary": "DevOps",
+      "content": "<h1>Git - Control de Versiones</h1><p>Git es el sistema de control de versiones más utilizado en el desarrollo de software.</p><h2>Comandos Básicos</h2><pre style='background-color: #2d3748; color: #e2e8f0; padding: 15px; border-radius: 5px; overflow-x: auto;'><code># Inicializar repositorio\ngit init\n\n# Agregar archivos\ngit add .\ngit add archivo.js\n\n# Hacer commit\ngit commit -m \"Mensaje del commit\"\n\n# Ver estado\ngit status\n\n# Ver historial\ngit log --oneline</code></pre><h2>Comandos Avanzados</h2><ul><li><strong>Branching:</strong> <code style='background-color: #e2e8f0; padding: 2px 5px; border-radius: 3px;'>git checkout -b nueva-rama</code></li><li><strong>Merging:</strong> <code style='background-color: #e2e8f0; padding: 2px 5px; border-radius: 3px;'>git merge rama-feature</code></li><li><strong>Rebasing:</strong> <code style='background-color: #e2e8f0; padding: 2px 5px; border-radius: 3px;'>git rebase main</code></li></ul><div style='border: 2px dashed #ffa500; padding: 10px; margin: 15px 0; background-color: #fff8dc;'><p><strong>⚠️ Importante:</strong> Siempre haz <em>backup</em> antes de operaciones destructivas como <code>git reset --hard</code></p></div>"
+    }
+  ]
+}

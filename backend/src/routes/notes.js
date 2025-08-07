@@ -9,6 +9,7 @@ router.use(authMiddleware);
 
 // Notes CRUD
 router.post('/', noteValidation.create, notesController.createNote);
+router.post('/import', notesController.importNotes);
 router.get('/', notesController.getNotes);
 router.get('/search', notesController.searchNotes);
 router.get('/tags', notesController.getUserTags);

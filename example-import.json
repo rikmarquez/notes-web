@@ -1,0 +1,29 @@
+{
+  "notes": [
+    {
+      "title": "Principios de Programación",
+      "summary": "Fundamentos",
+      "content": "Los principios fundamentales de la programación incluyen: DRY (Don't Repeat Yourself), SOLID, KISS (Keep It Simple, Stupid). Estos principios ayudan a escribir código más mantenible y escalable."
+    },
+    {
+      "title": "Bases de Datos Relacionales",
+      "summary": "SQL",
+      "content": "Las bases de datos relacionales organizan la información en tablas con relaciones definidas. SQL es el lenguaje estándar para consultar y manipular estos datos. Conceptos clave: normalización, índices, claves primarias y foráneas."
+    },
+    {
+      "title": "Metodologías Ágiles",
+      "summary": "Gestión de Proyectos",
+      "content": "Las metodologías ágiles como Scrum y Kanban permiten desarrollar software de manera iterativa e incremental. Enfatizan la colaboración, la adaptabilidad y la entrega continua de valor al cliente."
+    },
+    {
+      "title": "Arquitectura de Microservicios",
+      "summary": "Arquitectura",
+      "content": "Los microservicios dividen una aplicación monolítica en servicios pequeños e independientes. Beneficios: escalabilidad, tecnologías diversas, equipos autónomos. Desafíos: complejidad de red, gestión de datos distribuidos."
+    },
+    {
+      "title": "Testing y Calidad de Software",
+      "summary": "Pruebas",
+      "content": "Las pruebas de software son esenciales para garantizar calidad. Tipos: unitarias, integración, sistema, aceptación. TDD (Test-Driven Development) propone escribir tests antes que el código de producción."
+    }
+  ]
+}

@@ -4,6 +4,7 @@ import Header from '../components/Layout/Header';
 import Sidebar from '../components/Layout/Sidebar';
 import NotesList from '../components/Notes/NotesList';
 import SearchResults from '../components/Search/SearchResults';
+import ImportNotes from '../components/Import/ImportNotes';
 import { useDebounce } from '../hooks/useDebounce';
 
 const DashboardPage = () => {
@@ -11,6 +12,7 @@ const DashboardPage = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTag, setSelectedTag] = useState(null);
   const [showSearchResults, setShowSearchResults] = useState(false);
+  const [showImportModal, setShowImportModal] = useState(false);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
 
   // Debounce search query to avoid too many API calls
@@ -50,6 +52,11 @@ const DashboardPage = () => {
     setRefreshTrigger(prev => prev + 1);
   };
 
+  const handleImportComplete = () => {
+    setRefreshTrigger(prev => prev + 1);
+    setShowImportModal(false);
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Header 
@@ -67,6 +74,25 @@ const DashboardPage = () => {
         
         <main className="flex-1 overflow-auto">
           <div className="container py-6">
+            {/* Import Button */}
+            <div className="mb-6 flex justify-between items-center">
+              <h1 className="text-2xl font-bold text-gray-900">
+                {showSearchResults && debouncedSearchQuery ? 
+                  `Resultados para "${debouncedSearchQuery}"` :
+                  selectedTag ? 
+                    `Notas con tag "${selectedTag}"` :
+                    'Base de Conocimiento Colaborativa'
+                }
+              </h1>
+              <button
+                onClick={() => setShowImportModal(true)}
+                className="btn btn-secondary"
+                title="Importar notas desde archivo JSON"
+              >
+                📥 Importar Notas
+              </button>
+            </div>
+
             {/* Search Results - replace recent notes when searching */}
             {showSearchResults && debouncedSearchQuery ? (
               <SearchResults 
@@ -87,6 +113,26 @@ const DashboardPage = () => {
           </div>
         </main>
       </div>
+
+      {/* Import Modal */}
+      {showImportModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg max-w-2xl w-full mx-4 max-h-[90vh] overflow-auto">
+            <div className="sticky top-0 bg-white border-b px-6 py-4 flex justify-between items-center">
+              <h2 className="text-xl font-semibold">Importar Notas</h2>
+              <button
+                onClick={() => setShowImportModal(false)}
+                className="text-gray-500 hover:text-gray-700 text-2xl"
+              >
+                ×
+              </button>
+            </div>
+            <div className="p-6">
+              <ImportNotes onImportComplete={handleImportComplete} />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

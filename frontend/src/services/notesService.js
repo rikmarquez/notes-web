@@ -71,6 +71,15 @@ const notesService = {
     } catch (error) {
       throw error.response?.data || { success: false, message: 'Failed to get notes by tag' };
     }
+  },
+
+  async importNotes(notesData) {
+    try {
+      const response = await api.post('/notes/import', { notes: notesData });
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { success: false, message: 'Failed to import notes' };
+    }
   }
 };
 
