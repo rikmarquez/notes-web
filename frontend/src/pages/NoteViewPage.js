@@ -123,16 +123,16 @@ const NoteViewPage = () => {
                 </h1>
 
                 {/* Action Buttons */}
-                <div className="mb-4 flex flex-col sm:flex-row gap-2 sm:gap-3">
+                <div className="mb-4 flex gap-3">
                   <button
                     onClick={handleEdit}
-                    className="btn btn-primary btn-sm w-full sm:w-auto"
+                    className="btn btn-primary btn-sm"
                   >
                     ✏️ Editar
                   </button>
                   <button
                     onClick={handleDelete}
-                    className="btn btn-danger btn-sm w-full sm:w-auto"
+                    className="btn btn-danger btn-sm"
                   >
                     🗑️ Eliminar
                   </button>

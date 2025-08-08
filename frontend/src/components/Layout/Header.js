@@ -22,27 +22,24 @@ const Header = ({ onSearch, searchQuery, setSearchQuery }) => {
   return (
     <header className="bg-white shadow-sm border-b border-gray-200">
       <div className="container">
-        {/* First row: Logo and User Menu */}
-        <div className="flex items-center justify-between p-4 pb-2 md:pb-4">
-          {/* Logo */}
-          <div className="flex items-center gap-4">
-            <h1 className="text-xl md:text-2xl font-bold text-gray-900">
-              📝 Notes Web
-            </h1>
-          </div>
+        {/* First row: Logo and Logout Button */}
+        <div className="flex items-center justify-between p-4 pb-2">
+          <h1 className="text-xl md:text-2xl font-bold text-gray-900">
+            📝 Notes Web
+          </h1>
+          <button
+            onClick={logout}
+            className="btn btn-outline btn-sm text-xs md:text-sm"
+          >
+            Cerrar Sesión
+          </button>
+        </div>
 
-          {/* User Menu */}
-          <div className="flex items-center gap-2 md:gap-4">
-            <span className="text-gray-600 text-sm md:text-base hidden sm:inline">
-              Hola, {user?.name || user?.email}
-            </span>
-            <button
-              onClick={logout}
-              className="btn btn-outline btn-sm text-xs md:text-sm"
-            >
-              Cerrar Sesión
-            </button>
-          </div>
+        {/* Second row: User Greeting */}
+        <div className="px-4 pb-2">
+          <span className="text-gray-600 text-sm md:text-base">
+            Hola, {user?.name || user?.email}
+          </span>
         </div>
 
         {/* Search Bar - responsive single version */}
