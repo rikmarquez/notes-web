@@ -24,12 +24,26 @@ const Header = ({ onSearch, searchQuery, setSearchQuery, showSearchInHeader = tr
       <div className="container">
         {/* First row: Logo and Logout Button */}
         <div className="flex items-center justify-between p-4 pb-2">
-          <h1 className="text-base md:text-2xl font-bold text-gray-900 flex-1 min-w-0">
+          <h1 className="text-base md:text-xl font-bold text-gray-900 flex-1 min-w-0">
             📝 Notes Web
           </h1>
           <button
             onClick={logout}
-            className="px-3 py-1 text-xs bg-white border border-gray-300 rounded text-gray-700 hover:bg-gray-50 transition-colors whitespace-nowrap ml-3"
+            style={{
+              backgroundColor: '#dc2626',
+              color: 'white',
+              padding: '8px 16px',
+              borderRadius: '6px',
+              border: 'none',
+              fontSize: '14px',
+              fontWeight: '500',
+              cursor: 'pointer',
+              transition: 'background-color 0.2s ease',
+              whiteSpace: 'nowrap',
+              marginLeft: '12px'
+            }}
+            onMouseOver={(e) => e.target.style.backgroundColor = '#b91c1c'}
+            onMouseOut={(e) => e.target.style.backgroundColor = '#dc2626'}
           >
             Cerrar Sesión
           </button>
