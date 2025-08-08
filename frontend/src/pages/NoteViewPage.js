@@ -104,10 +104,10 @@ const NoteViewPage = () => {
       <div className="pt-16">
         <div className="container py-6">
           {/* Navigation */}
-          <div className="mb-6">
+          <div className="mb-8">
             <button
               onClick={handleBack}
-              className="btn btn-outline btn-sm"
+              className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200 flex items-center gap-2 text-base"
             >
               ← Volver al dashboard
             </button>
