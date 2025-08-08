@@ -81,22 +81,22 @@ const DashboardPage = () => {
             </div>
 
             {/* Action Buttons */}
-            <div className="mb-6 flex flex-col sm:flex-row gap-3 sm:gap-4">
+            <div className="mb-6 flex flex-wrap gap-3">
               <button
                 onClick={handleNewNote}
-                className="btn btn-primary w-full sm:w-auto"
+                className="btn btn-primary"
               >
                 ✏️ Nueva Nota
               </button>
               <button
                 onClick={() => handleTagFilter(null)}
-                className={`btn w-full sm:w-auto ${!selectedTag ? 'btn-primary' : 'btn-secondary'}`}
+                className={`btn ${!selectedTag ? 'btn-primary' : 'btn-secondary'}`}
               >
                 📋 Todas las notas
               </button>
               <button
                 onClick={() => setShowImportModal(true)}
-                className="btn btn-secondary w-full sm:w-auto"
+                className="btn btn-secondary"
                 title="Importar notas desde archivo JSON"
               >
                 📥 Importar Notas
