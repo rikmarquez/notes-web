@@ -63,7 +63,7 @@ const NoteViewPage = () => {
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50">
-        <Header />
+        <Header showSearchInHeader={true} />
         <div className="pt-16">
           <div className="container py-6">
             <div className="flex justify-center items-center h-64">
@@ -79,7 +79,7 @@ const NoteViewPage = () => {
   if (error || !note) {
     return (
       <div className="min-h-screen bg-gray-50">
-        <Header />
+        <Header showSearchInHeader={true} />
         <div className="pt-16">
           <div className="container py-6">
             <div className="alert alert-error">
@@ -99,7 +99,7 @@ const NoteViewPage = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Header />
+      <Header showSearchInHeader={true} />
       
       <div className="pt-16">
         <div className="container py-6">

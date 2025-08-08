@@ -63,6 +63,7 @@ const DashboardPage = () => {
         onSearch={handleSearch}
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
+        showSearchInHeader={false}
       />
       
       <div className="h-screen pt-16"> {/* pt-16 to account for fixed header */}
@@ -75,7 +76,7 @@ const DashboardPage = () => {
                   `Resultados para "${debouncedSearchQuery}"` :
                   selectedTag ? 
                     `Notas con tag "${selectedTag}"` :
-                    'Base de Conocimiento Colaborativa'
+                    'Base de Conocimiento'
                 }
               </h1>
             </div>
@@ -101,6 +102,38 @@ const DashboardPage = () => {
               >
                 📥 Importar Notas
               </button>
+            </div>
+
+            {/* Search Bar */}
+            <div className="mt-8 mb-6 px-4">
+              <div className="search-container relative w-full">
+                <input
+                  type="text"
+                  placeholder="Buscar notas, tags, contenido..."
+                  value={searchQuery}
+                  onChange={(e) => handleSearch(e.target.value)}
+                  className="form-input text-base md:text-lg pr-10 w-full"
+                />
+                {searchQuery && (
+                  <button
+                    onClick={() => handleSearch('')}
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                    title="Limpiar búsqueda"
+                  >
+                    <svg 
+                      width="20" 
+                      height="20" 
+                      viewBox="0 0 24 24" 
+                      fill="none" 
+                      stroke="currentColor" 
+                      strokeWidth="2"
+                    >
+                      <line x1="18" y1="6" x2="6" y2="18"></line>
+                      <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                  </button>
+                )}
+              </div>
             </div>
 
             {/* Search Results - replace recent notes when searching */}
