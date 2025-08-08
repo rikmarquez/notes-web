@@ -24,12 +24,12 @@ const Header = ({ onSearch, searchQuery, setSearchQuery }) => {
       <div className="container">
         {/* First row: Logo and Logout Button */}
         <div className="flex items-center justify-between p-4 pb-2">
-          <h1 className="text-xl md:text-2xl font-bold text-gray-900">
+          <h1 className="text-lg md:text-2xl font-bold text-gray-900 flex-shrink-0">
             📝 Notes Web
           </h1>
           <button
             onClick={logout}
-            className="btn btn-outline btn-sm text-xs md:text-sm"
+            className="btn btn-outline btn-sm text-xs md:text-sm ml-4 whitespace-nowrap flex-shrink-0"
           >
             Cerrar Sesión
           </button>
