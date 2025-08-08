@@ -62,19 +62,20 @@ const PopularTags = ({ onTagFilter, selectedTag }) => {
         Tags Populares
       </h3>
       
-      <div className="flex flex-wrap gap-2 sm:gap-3 w-full overflow-hidden">
+      <div className="flex flex-wrap gap-2 w-full" style={{maxWidth: '100%', overflowWrap: 'break-word'}}>
         {tags.slice(0, 20).map((tagData) => (
           <button
             key={tagData.tag}
             onClick={() => handleTagClick(tagData.tag)}
-            className={`inline-flex items-center px-2 py-1 sm:px-3 sm:py-2 rounded-full text-xs sm:text-sm transition-colors flex-shrink-0 max-w-full ${
+            className={`inline-flex items-center px-2 py-1 rounded-full text-xs transition-colors ${
               selectedTag === tagData.tag
                 ? 'bg-blue-100 text-blue-800 font-medium border border-blue-200'
                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
             }`}
+            style={{maxWidth: 'calc(50% - 4px)'}}
           >
             <span className="truncate">🏷️ {tagData.tag}</span>
-            <span className="ml-1 sm:ml-2 text-xs bg-white bg-opacity-70 px-1 sm:px-2 py-0.5 sm:py-1 rounded-full flex-shrink-0">
+            <span className="ml-1 text-xs bg-white bg-opacity-70 px-1 py-0.5 rounded-full">
               {tagData.count}
             </span>
           </button>
