@@ -104,10 +104,25 @@ const NoteViewPage = () => {
       <div className="pt-16">
         <div className="container py-6">
           {/* Navigation */}
-          <div className="mb-8">
+          <div style={{ marginBottom: '32px' }}>
             <button
               onClick={handleBack}
-              className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200 flex items-center gap-2 text-base"
+              style={{
+                backgroundColor: '#059669',
+                color: 'white',
+                padding: '12px 24px',
+                borderRadius: '8px',
+                border: 'none',
+                fontSize: '16px',
+                fontWeight: '500',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                transition: 'background-color 0.2s ease'
+              }}
+              onMouseOver={(e) => e.target.style.backgroundColor = '#047857'}
+              onMouseOut={(e) => e.target.style.backgroundColor = '#059669'}
             >
               ← Volver al dashboard
             </button>
