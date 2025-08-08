@@ -1,32 +1,10 @@
 import React from 'react';
 import { formatDate, getTextPreview } from '../../utils/helpers';
-import { useAuth } from '../../hooks/useAuth';
 
-const NoteCard = ({ note, onClick, onEdit, onDelete }) => {
-  const { user } = useAuth();
-  const handleClick = (e) => {
-    // Prevent card click when clicking action buttons
-    if (e.target.closest('.note-actions')) {
-      return;
-    }
+const NoteCard = ({ note, onClick }) => {
+  const handleClick = () => {
     onClick(note);
   };
-
-  const handleEdit = (e) => {
-    e.stopPropagation();
-    onEdit(note);
-  };
-
-  const handleDelete = (e) => {
-    e.stopPropagation();
-    if (window.confirm('¿Estás seguro de que quieres eliminar esta nota?')) {
-      onDelete(note.id);
-    }
-  };
-
-  // Allow all authenticated users to edit and delete any note (collaborative knowledge base)
-  const canEdit = !!user; // Any authenticated user can edit
-  const canDelete = !!user; // Any authenticated user can delete
 
   return (
     <div 
@@ -34,33 +12,11 @@ const NoteCard = ({ note, onClick, onEdit, onDelete }) => {
       onClick={handleClick}
     >
       <div className="card-body">
-        {/* Header with title and actions */}
-        <div className="flex justify-between items-start mb-3">
+        {/* Header with title */}
+        <div className="mb-3">
           <h3 className="text-lg font-semibold text-gray-900 line-clamp-2">
             {note.title}
           </h3>
-          {(canEdit || canDelete) && (
-            <div className="note-actions flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-              {canEdit && (
-                <button
-                  onClick={handleEdit}
-                  className="text-gray-500 hover:text-blue-600 p-1"
-                  title="Editar nota"
-                >
-                  ✏️
-                </button>
-              )}
-              {canDelete && (
-                <button
-                  onClick={handleDelete}
-                  className="text-gray-500 hover:text-red-600 p-1"
-                  title="Eliminar nota"
-                >
-                  🗑️
-                </button>
-              )}
-            </div>
-          )}
         </div>
 
         {/* Summary */}

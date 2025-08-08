@@ -3,7 +3,7 @@ import NoteCard from './NoteCard';
 import notesService from '../../services/notesService';
 import { getErrorMessage } from '../../utils/helpers';
 
-const NotesList = ({ searchQuery, selectedTag, onNoteClick, onEditNote, refreshTrigger }) => {
+const NotesList = ({ searchQuery, selectedTag, onNoteClick, refreshTrigger }) => {
   const [notes, setNotes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -54,18 +54,6 @@ const NotesList = ({ searchQuery, selectedTag, onNoteClick, onEditNote, refreshT
     }
   };
 
-  const handleDeleteNote = async (noteId) => {
-    try {
-      const response = await notesService.deleteNote(noteId);
-      if (response.success) {
-        setNotes(prev => prev.filter(note => note.id !== noteId));
-      } else {
-        alert(response.message || 'Error al eliminar la nota');
-      }
-    } catch (error) {
-      alert(getErrorMessage(error));
-    }
-  };
 
   if (loading && notes.length === 0) {
     return (
@@ -103,14 +91,6 @@ const NotesList = ({ searchQuery, selectedTag, onNoteClick, onEditNote, refreshT
            selectedTag ? 'Prueba con otro tag o crea una nueva nota' :
            'Comienza creando tu primera nota para organizar tus ideas'}
         </p>
-        {!searchQuery && !selectedTag && (
-          <button 
-            onClick={() => onEditNote(null)}
-            className="btn btn-primary"
-          >
-            Crear mi primera nota
-          </button>
-        )}
       </div>
     );
   }
@@ -136,8 +116,6 @@ const NotesList = ({ searchQuery, selectedTag, onNoteClick, onEditNote, refreshT
             <NoteCard
               note={note}
               onClick={onNoteClick}
-              onEdit={onEditNote}
-              onDelete={handleDeleteNote}
             />
           </div>
         ))}

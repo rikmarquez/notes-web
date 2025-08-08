@@ -117,40 +117,37 @@ const NoteViewPage = () => {
             {/* Header */}
             <div className="card mb-6">
               <div className="card-header">
-                <div className="flex justify-between items-start">
-                  <div className="flex-1">
-                    <h1 className="text-3xl font-bold text-gray-900 mb-4">
-                      {note.title}
-                    </h1>
-                    
-                    {/* Metadata */}
-                    <div className="flex flex-wrap gap-4 text-sm text-gray-600">
-                      <span>
-                        📅 Creado: {formatDateTime(note.created_at)}
-                      </span>
-                      {note.created_at !== note.updated_at && (
-                        <span>
-                          ✏️ Editado: {formatDateTime(note.updated_at)}
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                  
-                  {/* Actions */}
-                  <div className="flex gap-2">
-                    <button
-                      onClick={handleEdit}
-                      className="btn btn-primary btn-sm"
-                    >
-                      ✏️ Editar
-                    </button>
-                    <button
-                      onClick={handleDelete}
-                      className="btn btn-danger btn-sm"
-                    >
-                      🗑️ Eliminar
-                    </button>
-                  </div>
+                {/* Title */}
+                <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">
+                  {note.title}
+                </h1>
+
+                {/* Action Buttons */}
+                <div className="mb-4 flex flex-col sm:flex-row gap-2 sm:gap-3">
+                  <button
+                    onClick={handleEdit}
+                    className="btn btn-primary btn-sm w-full sm:w-auto"
+                  >
+                    ✏️ Editar
+                  </button>
+                  <button
+                    onClick={handleDelete}
+                    className="btn btn-danger btn-sm w-full sm:w-auto"
+                  >
+                    🗑️ Eliminar
+                  </button>
+                </div>
+                
+                {/* Metadata */}
+                <div className="flex flex-wrap gap-3 sm:gap-4 text-xs sm:text-sm text-gray-600">
+                  <span>
+                    📅 Creado: {formatDateTime(note.created_at)}
+                  </span>
+                  {note.created_at !== note.updated_at && (
+                    <span>
+                      ✏️ Editado: {formatDateTime(note.updated_at)}
+                    </span>
+                  )}
                 </div>
               </div>
             </div>

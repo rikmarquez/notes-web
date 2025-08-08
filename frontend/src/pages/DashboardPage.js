@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../components/Layout/Header';
-import Sidebar from '../components/Layout/Sidebar';
 import NotesList from '../components/Notes/NotesList';
 import SearchResults from '../components/Search/SearchResults';
 import ImportNotes from '../components/Import/ImportNotes';
+import PopularTags from '../components/Tags/PopularTags';
 import { useDebounce } from '../hooks/useDebounce';
 
 const DashboardPage = () => {
@@ -65,17 +65,11 @@ const DashboardPage = () => {
         setSearchQuery={setSearchQuery}
       />
       
-      <div className="flex h-screen pt-16"> {/* pt-16 to account for fixed header */}
-        <Sidebar 
-          onTagFilter={handleTagFilter}
-          selectedTag={selectedTag}
-          onNewNote={handleNewNote}
-        />
-        
-        <main className="flex-1 overflow-auto">
+      <div className="h-screen pt-16"> {/* pt-16 to account for fixed header */}
+        <main className="overflow-auto h-full">
           <div className="container py-6">
-            {/* Import Button */}
-            <div className="mb-6 flex justify-between items-center">
+            {/* Title */}
+            <div className="mb-4">
               <h1 className="text-2xl font-bold text-gray-900">
                 {showSearchResults && debouncedSearchQuery ? 
                   `Resultados para "${debouncedSearchQuery}"` :
@@ -84,9 +78,25 @@ const DashboardPage = () => {
                     'Base de Conocimiento Colaborativa'
                 }
               </h1>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="mb-6 flex flex-col sm:flex-row gap-3 sm:gap-4">
+              <button
+                onClick={handleNewNote}
+                className="btn btn-primary w-full sm:w-auto"
+              >
+                ✏️ Nueva Nota
+              </button>
+              <button
+                onClick={() => handleTagFilter(null)}
+                className={`btn w-full sm:w-auto ${!selectedTag ? 'btn-primary' : 'btn-secondary'}`}
+              >
+                📋 Todas las notas
+              </button>
               <button
                 onClick={() => setShowImportModal(true)}
-                className="btn btn-secondary"
+                className="btn btn-secondary w-full sm:w-auto"
                 title="Importar notas desde archivo JSON"
               >
                 📥 Importar Notas
@@ -106,8 +116,15 @@ const DashboardPage = () => {
                 searchQuery={''}
                 selectedTag={selectedTag}
                 onNoteClick={handleNoteClick}
-                onEditNote={handleEditNote}
                 refreshTrigger={refreshTrigger}
+              />
+            )}
+
+            {/* Popular Tags - Only show when not searching */}
+            {!showSearchResults && (
+              <PopularTags
+                onTagFilter={handleTagFilter}
+                selectedTag={selectedTag}
               />
             )}
           </div>
