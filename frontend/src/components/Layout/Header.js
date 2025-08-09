@@ -30,8 +30,8 @@ const Header = ({ onSearch, searchQuery, setSearchQuery, showSearchInHeader = tr
               alt="Notes Web Logo" 
               className="mr-2"
               style={{
-                width: '24px',
-                height: '24px',
+                width: '32px',
+                height: '32px',
                 objectFit: 'contain'
               }}
             />
