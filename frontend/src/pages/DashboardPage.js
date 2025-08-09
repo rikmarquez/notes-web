@@ -66,9 +66,9 @@ const DashboardPage = () => {
         showSearchInHeader={false}
       />
       
-      <div className="h-screen pt-16"> {/* pt-16 to account for fixed header */}
-        <main className="overflow-auto h-full">
-          <div className="container py-6 pb-16">
+      <div className="pt-16"> {/* pt-16 to account for fixed header */}
+        <main className="min-h-screen">
+          <div className="container py-6 pb-24">
             {/* Title */}
             <div className="mb-4">
               <h1 className="text-2xl font-bold text-gray-900">

@@ -36,7 +36,7 @@ const NoteEditPage = () => {
       <Header showSearchInHeader={false} />
       
       <div className="pt-16"> {/* Account for fixed header */}
-        <div className="container py-6 pb-16">
+        <div className="container py-6 pb-24">
           <NoteEditor
             noteId={isNewNote ? null : id}
             onSave={handleSave}
