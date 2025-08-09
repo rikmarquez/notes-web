@@ -43,6 +43,40 @@ export const stripHtml = (html) => {
   return temp.textContent || temp.innerText || '';
 };
 
+// Strip HTML but preserve line breaks
+export const stripHtmlPreservingLineBreaks = (html) => {
+  if (!html) return '';
+  
+  let text = html
+    // Convert <br>, <br/>, <br /> to line breaks
+    .replace(/<br\s*\/?>/gi, '\n')
+    // Convert </p> tags to double line breaks (paragraph separation)
+    .replace(/<\/p>/gi, '\n\n')
+    // Convert </div> tags to line breaks
+    .replace(/<\/div>/gi, '\n')
+    // Convert </li> tags to line breaks
+    .replace(/<\/li>/gi, '\n')
+    // Convert </h1>, </h2>, etc. to double line breaks
+    .replace(/<\/h[1-6]>/gi, '\n\n');
+  
+  // Now strip all remaining HTML tags
+  const temp = document.createElement('div');
+  temp.innerHTML = text;
+  text = temp.textContent || temp.innerText || '';
+  
+  // Clean up multiple consecutive line breaks (more than 2)
+  text = text.replace(/\n{3,}/g, '\n\n');
+  
+  // Trim whitespace from each line and remove empty lines at start/end
+  text = text
+    .split('\n')
+    .map(line => line.trim())
+    .join('\n')
+    .trim();
+  
+  return text;
+};
+
 export const getTextPreview = (content, maxLength = 150) => {
   const plainText = stripHtml(content);
   return truncateText(plainText, maxLength);
@@ -151,8 +185,8 @@ export const copyToClipboard = async (text) => {
 
 // Format note content for copying (just main content)
 export const formatNoteForCopy = (note) => {
-  // Only copy the main content, stripped of HTML
-  return note.content ? stripHtml(note.content) : '';
+  // Only copy the main content, stripped of HTML but preserving line breaks
+  return note.content ? stripHtmlPreservingLineBreaks(note.content) : '';
 };
 
 // Error handling utility
