@@ -286,7 +286,7 @@ const NoteEditor = ({ noteId, onSave, onCancel }) => {
       </div>
 
       {/* Mobile save button */}
-      <div className="mt-8 block md:hidden">
+      <div className="mt-8 mb-16 block md:hidden">
         <button
           onClick={handleSave}
           className="btn btn-primary w-full"

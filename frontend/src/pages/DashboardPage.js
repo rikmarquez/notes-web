@@ -155,12 +155,10 @@ const DashboardPage = () => {
 
             {/* Popular Tags - Only show when not searching */}
             {!showSearchResults && (
-              <div className="mb-16">
-                <PopularTags
-                  onTagFilter={handleTagFilter}
-                  selectedTag={selectedTag}
-                />
-              </div>
+              <PopularTags
+                onTagFilter={handleTagFilter}
+                selectedTag={selectedTag}
+              />
             )}
           </div>
         </main>
