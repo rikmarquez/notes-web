@@ -33,7 +33,7 @@ const NoteEditPage = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Header showSearchInHeader={true} />
+      <Header showSearchInHeader={false} />
       
       <div className="pt-16"> {/* Account for fixed header */}
         <div className="container py-6">
