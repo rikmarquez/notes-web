@@ -24,9 +24,16 @@ const Header = ({ onSearch, searchQuery, setSearchQuery, showSearchInHeader = tr
       <div className="container">
         {/* First row: Logo and Logout Button */}
         <div className="flex items-center justify-between p-4 pb-2">
-          <h1 className="text-base md:text-xl font-bold text-gray-900 flex-1 min-w-0">
-            📝 Notes Web
-          </h1>
+          <div className="flex items-center flex-1 min-w-0">
+            <img 
+              src="/assets/notes-logo.png" 
+              alt="Notes Web Logo" 
+              className="h-8 w-8 mr-2"
+            />
+            <h1 className="text-base md:text-xl font-bold text-gray-900">
+              Notes Web
+            </h1>
+          </div>
           <button
             onClick={logout}
             style={{
