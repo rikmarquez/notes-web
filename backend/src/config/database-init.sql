@@ -41,6 +41,19 @@ CREATE TABLE IF NOT EXISTS connections (
   UNIQUE(source_note_id, target_note_id, connection_type)
 );
 
+-- Create attachments table
+CREATE TABLE IF NOT EXISTS attachments (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  note_id UUID REFERENCES notes(id) ON DELETE CASCADE,
+  filename VARCHAR(255) NOT NULL,
+  original_filename VARCHAR(255) NOT NULL,
+  file_path VARCHAR(500) NOT NULL,
+  file_size INTEGER NOT NULL,
+  mime_type VARCHAR(100) NOT NULL,
+  uploaded_by UUID REFERENCES users(id),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 -- Create indexes for optimized searching
 CREATE INDEX IF NOT EXISTS idx_notes_user_id ON notes(user_id);
 CREATE INDEX IF NOT EXISTS idx_notes_title_gin ON notes USING gin(to_tsvector('spanish', title));
@@ -49,6 +62,8 @@ CREATE INDEX IF NOT EXISTS idx_notes_summary_gin ON notes USING gin(to_tsvector(
 CREATE INDEX IF NOT EXISTS idx_notes_tags_gin ON notes USING gin(tags);
 CREATE INDEX IF NOT EXISTS idx_connections_source ON connections(source_note_id);
 CREATE INDEX IF NOT EXISTS idx_connections_target ON connections(target_note_id);
+CREATE INDEX IF NOT EXISTS idx_attachments_note_id ON attachments(note_id);
+CREATE INDEX IF NOT EXISTS idx_attachments_uploaded_by ON attachments(uploaded_by);
 
 -- Function to update the updated_at timestamp
 CREATE OR REPLACE FUNCTION update_updated_at_column()

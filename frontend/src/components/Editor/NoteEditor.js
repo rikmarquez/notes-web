@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import TagInput from '../Tags/TagInput';
+import AttachmentsSection from '../Attachments/AttachmentsSection';
 import notesService from '../../services/notesService';
 import { getErrorMessage } from '../../utils/helpers';
 
@@ -274,6 +275,14 @@ const NoteEditor = ({ noteId, onSave, onCancel }) => {
             placeholder="Agrega tags para organizar tus notas..."
           />
         </div>
+
+        {/* Attachments */}
+        {noteId && (
+          <AttachmentsSection 
+            noteId={noteId} 
+            isEditing={true}
+          />
+        )}
       </div>
 
       {/* Mobile save button */}

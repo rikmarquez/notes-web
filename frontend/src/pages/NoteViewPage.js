@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Header from '../components/Layout/Header';
 import ConnectionsSection from '../components/Connections/ConnectionsSection';
+import AttachmentsSection from '../components/Attachments/AttachmentsSection';
 import notesService from '../services/notesService';
 import { formatDateTime, getErrorMessage } from '../utils/helpers';
 
@@ -221,6 +222,12 @@ const NoteViewPage = () => {
                 </div>
               </div>
             )}
+
+            {/* Attachments */}
+            <AttachmentsSection 
+              noteId={id} 
+              isEditing={false}
+            />
 
             {/* Connections */}
             <ConnectionsSection noteId={id} />

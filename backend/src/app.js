@@ -8,6 +8,7 @@ require('dotenv').config();
 const authRoutes = require('./routes/auth');
 const notesRoutes = require('./routes/notes');
 const connectionsRoutes = require('./routes/connections');
+const attachmentsRoutes = require('./routes/attachments');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -66,6 +67,7 @@ app.get('/health', (req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/notes', notesRoutes);
 app.use('/api/connections', connectionsRoutes);
+app.use('/api/attachments', attachmentsRoutes);
 
 // Serve static files from React build (in production)
 if (process.env.NODE_ENV === 'production') {
