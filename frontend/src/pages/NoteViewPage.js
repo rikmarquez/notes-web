@@ -4,7 +4,7 @@ import Header from '../components/Layout/Header';
 import ConnectionsSection from '../components/Connections/ConnectionsSection';
 import AttachmentsSection from '../components/Attachments/AttachmentsSection';
 import notesService from '../services/notesService';
-import { formatDateTime, getErrorMessage } from '../utils/helpers';
+import { formatDateTime, getErrorMessage, copyToClipboard, formatNoteForCopy } from '../utils/helpers';
 
 const NoteViewPage = () => {
   const { id } = useParams();
@@ -12,6 +12,7 @@ const NoteViewPage = () => {
   const [note, setNote] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [copyFeedback, setCopyFeedback] = useState('');
 
   useEffect(() => {
     const fetchNote = async () => {
@@ -59,6 +60,20 @@ const NoteViewPage = () => {
 
   const handleBack = () => {
     navigate('/dashboard');
+  };
+
+  const handleCopyContent = async () => {
+    if (!note || !note.content) {
+      setCopyFeedback('No hay contenido para copiar');
+      setTimeout(() => setCopyFeedback(''), 2000);
+      return;
+    }
+
+    const contentToCopy = formatNoteForCopy(note);
+    const result = await copyToClipboard(contentToCopy);
+    
+    setCopyFeedback(result.message);
+    setTimeout(() => setCopyFeedback(''), 2000);
   };
 
   if (loading) {
@@ -189,10 +204,24 @@ const NoteViewPage = () => {
             {/* Main Content */}
             {note.content && (
               <div className="card mb-6">
-                <div className="card-header">
+                <div className="card-header flex justify-between items-center">
                   <h2 className="text-lg font-semibold text-gray-800">
                     📝 Contenido Principal
                   </h2>
+                  <div className="relative">
+                    <button
+                      onClick={handleCopyContent}
+                      className="btn btn-outline btn-sm flex items-center gap-2 hover:bg-gray-100 transition-colors"
+                      title="Copiar contenido al portapapeles"
+                    >
+                      📋 Copiar
+                    </button>
+                    {copyFeedback && (
+                      <div className="absolute top-full right-0 mt-2 px-3 py-2 bg-gray-800 text-white text-sm rounded shadow-lg whitespace-nowrap z-10">
+                        {copyFeedback}
+                      </div>
+                    )}
+                  </div>
                 </div>
                 <div className="card-body">
                   <div 

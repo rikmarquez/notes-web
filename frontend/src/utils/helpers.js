@@ -116,6 +116,45 @@ export const highlightSearchTerm = (text, searchTerm) => {
   return text.replace(regex, '<mark>$1</mark>');
 };
 
+// Clipboard utility
+export const copyToClipboard = async (text) => {
+  try {
+    // Modern approach - using Clipboard API
+    if (navigator.clipboard && window.isSecureContext) {
+      await navigator.clipboard.writeText(text);
+      return { success: true, message: '¡Copiado al portapapeles!' };
+    }
+    
+    // Fallback approach for older browsers or non-HTTPS
+    const textArea = document.createElement('textarea');
+    textArea.value = text;
+    textArea.style.position = 'absolute';
+    textArea.style.left = '-9999px';
+    textArea.style.top = '-9999px';
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+    
+    const successful = document.execCommand('copy');
+    document.body.removeChild(textArea);
+    
+    if (successful) {
+      return { success: true, message: '¡Copiado al portapapeles!' };
+    } else {
+      throw new Error('No se pudo copiar');
+    }
+  } catch (error) {
+    console.error('Error al copiar:', error);
+    return { success: false, message: 'No se pudo copiar al portapapeles' };
+  }
+};
+
+// Format note content for copying (just main content)
+export const formatNoteForCopy = (note) => {
+  // Only copy the main content, stripped of HTML
+  return note.content ? stripHtml(note.content) : '';
+};
+
 // Error handling utility
 export const getErrorMessage = (error) => {
   if (typeof error === 'string') return error;
