@@ -10,9 +10,21 @@ const AuthPage = () => {
       <div className="w-full max-w-md">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">
-            📝 Notes Web
-          </h1>
+          <div className="flex items-center justify-center mb-4">
+            <img 
+              src="/assets/notes-logo.png" 
+              alt="Notes Web Logo" 
+              style={{
+                width: '48px',
+                height: '48px',
+                objectFit: 'contain'
+              }}
+              className="mr-3"
+            />
+            <h1 className="text-4xl font-bold text-gray-900">
+              Notes Web
+            </h1>
+          </div>
           <p className="text-lg text-gray-600">
             Tu sistema personal de gestión de conocimiento
           </p>

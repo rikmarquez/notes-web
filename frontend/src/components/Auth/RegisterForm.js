@@ -82,17 +82,6 @@ const RegisterForm = ({ onSwitchToLogin }) => {
   return (
     <div className="card w-full max-w-md mx-auto">
       <div className="card-header">
-        <div className="flex items-center justify-center mb-4">
-          <img 
-            src="/assets/notes-logo.png" 
-            alt="Notes Web Logo" 
-            style={{
-              width: '48px',
-              height: '48px',
-              objectFit: 'contain'
-            }}
-          />
-        </div>
         <h2 className="text-2xl font-bold text-center">Crear Cuenta</h2>
         <p className="text-gray-600 text-center mt-2">
           Únete y comienza a organizar tu conocimiento
