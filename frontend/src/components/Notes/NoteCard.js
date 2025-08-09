@@ -23,35 +23,8 @@ const NoteCard = ({ note, onClick }) => {
         {note.summary && (
           <div className="mb-3">
             <p className="text-sm text-gray-600 italic">
-              {getTextPreview(note.summary, 120)}
+              {getTextPreview(note.summary, 200)}
             </p>
-          </div>
-        )}
-
-        {/* Content preview */}
-        {note.content && (
-          <div className="mb-3">
-            <p className="text-gray-700">
-              {getTextPreview(note.content, 150)}
-            </p>
-          </div>
-        )}
-
-        {/* Tags */}
-        {note.tags && note.tags.length > 0 && (
-          <div className="mb-3">
-            <div className="flex flex-wrap gap-1">
-              {note.tags.slice(0, 4).map((tag, index) => (
-                <span key={index} className="tag text-xs">
-                  {tag}
-                </span>
-              ))}
-              {note.tags.length > 4 && (
-                <span className="text-xs text-gray-500">
-                  +{note.tags.length - 4} más
-                </span>
-              )}
-            </div>
           </div>
         )}
 
