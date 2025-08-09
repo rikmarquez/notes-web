@@ -124,7 +124,10 @@ class Note {
           to_tsvector('spanish', n.title) @@ plainto_tsquery('spanish', $1) OR
           to_tsvector('spanish', COALESCE(n.summary, '')) @@ plainto_tsquery('spanish', $1) OR
           to_tsvector('spanish', COALESCE(n.content, '')) @@ plainto_tsquery('spanish', $1) OR
-          $1 = ANY(n.tags)
+          LOWER($1) = ANY(SELECT LOWER(unnest(n.tags))) OR
+          n.title ILIKE '%' || $1 || '%' OR
+          n.summary ILIKE '%' || $1 || '%' OR
+          n.content ILIKE '%' || $1 || '%'
         )
       ORDER BY rank DESC, n.updated_at DESC
       LIMIT $2
@@ -162,7 +165,7 @@ class Note {
       SELECT n.*, u.name as author_name, u.email as author_email 
       FROM notes n
       LEFT JOIN users u ON n.user_id = u.id
-      WHERE $1 = ANY(n.tags)
+      WHERE LOWER($1) = ANY(SELECT LOWER(unnest(n.tags)))
       ORDER BY n.updated_at DESC
       LIMIT $2 OFFSET $3
     `;
