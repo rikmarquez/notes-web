@@ -118,7 +118,7 @@ const NoteViewPage = () => {
       <Header showSearchInHeader={false} />
       
       <div className="pt-16">
-        <div className="container" style={{ paddingTop: '32px', paddingBottom: '24px' }}>
+        <div className="container" style={{ paddingTop: '32px', paddingBottom: '64px' }}>
           {/* Navigation */}
           <div style={{ marginBottom: '32px' }}>
             <button

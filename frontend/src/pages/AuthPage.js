@@ -38,7 +38,7 @@ const AuthPage = () => {
         )}
 
         {/* Features */}
-        <div className="mt-12 text-center">
+        <div className="mt-12 mb-16 text-center">
           <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-4">
             Características principales
           </h3>
