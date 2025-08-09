@@ -28,7 +28,7 @@ const Header = ({ onSearch, searchQuery, setSearchQuery, showSearchInHeader = tr
             <img 
               src="/assets/notes-logo.png" 
               alt="Notes Web Logo" 
-              className="h-8 w-8 mr-2"
+              className="h-6 w-6 mr-2"
             />
             <h1 className="text-base md:text-xl font-bold text-gray-900">
               Notes Web
