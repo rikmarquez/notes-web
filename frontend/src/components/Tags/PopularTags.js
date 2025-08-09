@@ -32,7 +32,7 @@ const PopularTags = ({ onTagFilter, selectedTag }) => {
 
   if (loading) {
     return (
-      <div className="mt-8 mb-24">
+      <div className="mt-8 mb-24" style={{ marginBottom: '6rem' }}>
         <h3 className="text-lg font-semibold text-gray-900 mb-4">
           Tags Populares
         </h3>
@@ -45,7 +45,7 @@ const PopularTags = ({ onTagFilter, selectedTag }) => {
 
   if (tags.length === 0) {
     return (
-      <div className="mt-8 mb-24">
+      <div className="mt-8 mb-24" style={{ marginBottom: '6rem' }}>
         <h3 className="text-lg font-semibold text-gray-900 mb-4">
           Tags Populares
         </h3>
@@ -57,7 +57,7 @@ const PopularTags = ({ onTagFilter, selectedTag }) => {
   }
 
   return (
-    <div className="mt-6 sm:mt-8 mb-24 w-full">
+    <div className="mt-6 sm:mt-8 mb-24 w-full" style={{ marginBottom: '6rem !important' }}>
       <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-3 sm:mb-4">
         Tags Populares
       </h3>

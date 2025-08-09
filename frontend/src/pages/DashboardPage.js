@@ -68,7 +68,7 @@ const DashboardPage = () => {
       
       <div className="pt-16"> {/* pt-16 to account for fixed header */}
         <main className="min-h-screen">
-          <div className="container py-6 pb-24">
+          <div className="container py-6 pb-24" style={{ paddingBottom: '6rem' }}>
             {/* Title */}
             <div className="mb-4">
               <h1 className="text-2xl font-bold text-gray-900">
