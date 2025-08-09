@@ -50,11 +50,13 @@ const Header = ({ onSearch, searchQuery, setSearchQuery, showSearchInHeader = tr
         </div>
 
         {/* Second row: User Greeting */}
-        <div className="px-4 pb-2">
-          <span className="text-gray-600 text-sm md:text-base">
-            Hola, {user?.name || user?.email}
-          </span>
-        </div>
+        {showSearchInHeader && (
+          <div className="px-4 pb-2">
+            <span className="text-gray-600 text-sm md:text-base">
+              Hola, {user?.name || user?.email}
+            </span>
+          </div>
+        )}
 
         {/* Search Bar - responsive single version */}
         {showSearchInHeader && (

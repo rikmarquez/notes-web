@@ -99,7 +99,7 @@ const NoteViewPage = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Header showSearchInHeader={true} />
+      <Header showSearchInHeader={false} />
       
       <div className="pt-16">
         <div className="container" style={{ paddingTop: '32px', paddingBottom: '24px' }}>
