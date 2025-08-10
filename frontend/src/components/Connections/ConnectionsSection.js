@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import ConnectionModal from './ConnectionModal';
+import InlineConnectionForm from './InlineConnectionForm';
 import connectionsService from '../../services/connectionsService';
 import { getConnectionTypeLabel, getErrorMessage } from '../../utils/helpers';
 
@@ -9,6 +10,7 @@ const ConnectionsSection = ({ noteId }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [showModal, setShowModal] = useState(false);
+  const [showInlineForm, setShowInlineForm] = useState(false);
 
   useEffect(() => {
     fetchConnections();
@@ -55,6 +57,7 @@ const ConnectionsSection = ({ noteId }) => {
       
       if (response.success) {
         setShowModal(false);
+        setShowInlineForm(false);
         fetchConnections(); // Refresh connections
       } else {
         throw new Error(response.message || 'Error al crear la conexión');
@@ -112,12 +115,14 @@ const ConnectionsSection = ({ noteId }) => {
             <h2 className="text-lg font-semibold text-gray-800">
               🔗 Ideas Conectadas
             </h2>
-            <button
-              onClick={() => setShowModal(true)}
-              className="btn btn-primary btn-sm"
-            >
-              + Añadir Conexión
-            </button>
+            {!showInlineForm && (
+              <button
+                onClick={() => setShowInlineForm(true)}
+                className="btn btn-primary btn-sm"
+              >
+                + Añadir Conexión
+              </button>
+            )}
           </div>
         </div>
 
@@ -134,7 +139,19 @@ const ConnectionsSection = ({ noteId }) => {
             </div>
           )}
 
-          {!hasConnections ? (
+          {/* Inline Connection Form */}
+          {showInlineForm && (
+            <div className="mb-4">
+              <InlineConnectionForm
+                noteId={noteId}
+                connectionTypes={connectionTypes}
+                onCreateConnection={handleCreateConnection}
+                onCancel={() => setShowInlineForm(false)}
+              />
+            </div>
+          )}
+
+          {!hasConnections && !showInlineForm ? (
             <div className="text-center py-8">
               <div className="text-4xl mb-4">🔗</div>
               <h3 className="text-lg font-medium text-gray-700 mb-2">
@@ -144,13 +161,13 @@ const ConnectionsSection = ({ noteId }) => {
                 Conecta esta idea con otras notas para crear una red de conocimiento
               </p>
               <button
-                onClick={() => setShowModal(true)}
+                onClick={() => setShowInlineForm(true)}
                 className="btn btn-primary"
               >
                 Crear primera conexión
               </button>
             </div>
-          ) : (
+          ) : hasConnections ? (
             <div className="space-y-6">
               {connectionTypes.map(type => {
                 const typeConnections = connections[type] || [];
@@ -198,7 +215,7 @@ const ConnectionsSection = ({ noteId }) => {
                 );
               })}
             </div>
-          )}
+          ) : null}
         </div>
       </div>
 
