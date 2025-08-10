@@ -14,9 +14,16 @@ const NoteCard = ({ note, onClick }) => {
       <div className="card-body">
         {/* Header with title */}
         <div className="mb-3">
-          <h3 className="text-lg font-semibold text-gray-900 line-clamp-2">
-            {note.title}
-          </h3>
+          <div className="flex items-start justify-between gap-2">
+            <h3 className="text-lg font-semibold text-gray-900 line-clamp-2 flex-1">
+              {note.title}
+            </h3>
+            {note.is_private && (
+              <div className="flex-shrink-0 bg-red-100 text-red-800 text-xs px-2 py-1 rounded-full flex items-center gap-1">
+                🔒 <span>Privado</span>
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Summary */}

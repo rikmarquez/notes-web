@@ -11,7 +11,8 @@ const NoteEditor = ({ noteId, onSave, onCancel }) => {
     title: '',
     summary: '',
     content: '',
-    tags: []
+    tags: [],
+    isPrivate: false
   });
   const [loading, setLoading] = useState(false);
   const [loadingNote, setLoadingNote] = useState(!!noteId);
@@ -53,7 +54,8 @@ const NoteEditor = ({ noteId, onSave, onCancel }) => {
             title: note.title || '',
             summary: note.summary || '',
             content: note.content || '',
-            tags: note.tags || []
+            tags: note.tags || [],
+            isPrivate: note.is_private || false
           });
         } else {
           setError(response.message || 'Error al cargar la nota');
@@ -109,7 +111,8 @@ const NoteEditor = ({ noteId, onSave, onCancel }) => {
         title: formData.title.trim(),
         summary: formData.summary.trim() || null,
         content: formData.content.trim() || null,
-        tags: formData.tags
+        tags: formData.tags,
+        isPrivate: formData.isPrivate
       };
 
       let response;
@@ -274,6 +277,26 @@ const NoteEditor = ({ noteId, onSave, onCancel }) => {
             onChange={(tags) => handleInputChange('tags', tags)}
             placeholder="Agrega tags para organizar tus notas..."
           />
+        </div>
+
+        {/* Privacy Setting */}
+        <div className="form-group">
+          <div className="flex items-center space-x-3">
+            <input
+              type="checkbox"
+              id="isPrivate"
+              checked={formData.isPrivate}
+              onChange={(e) => handleInputChange('isPrivate', e.target.checked)}
+              className="form-checkbox h-5 w-5 text-red-600 rounded border-gray-300 focus:ring-red-500"
+              disabled={loading}
+            />
+            <label htmlFor="isPrivate" className="form-label mb-0 cursor-pointer">
+              <span className="font-medium text-red-700">🔒 Nota Privada</span>
+              <div className="text-sm text-gray-600 mt-1">
+                Solo yo puedo ver, editar y eliminar esta nota. Perfecta para información sensible como contraseñas, cuentas personales, etc.
+              </div>
+            </label>
+          </div>
         </div>
 
         {/* Attachments */}

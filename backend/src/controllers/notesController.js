@@ -3,7 +3,7 @@ const Note = require('../models/Note');
 const notesController = {
   async createNote(req, res) {
     try {
-      const { title, summary, content, tags, images } = req.body;
+      const { title, summary, content, tags, images, isPrivate } = req.body;
       const userId = req.user.id;
 
       const note = await Note.create({
@@ -12,7 +12,8 @@ const notesController = {
         summary,
         content,
         tags: tags?.map(tag => tag.toLowerCase().trim()) || [],
-        images
+        images,
+        isPrivate: isPrivate || false
       });
 
       res.status(201).json({
@@ -36,8 +37,9 @@ const notesController = {
       const limit = parseInt(req.query.limit) || 20;
       const offset = (page - 1) * limit;
 
-      // Mostrar todas las notas de todos los usuarios
-      const notes = await Note.findAll(limit, offset);
+      const userId = req.user.id;
+      // Mostrar notas públicas + notas privadas del usuario actual
+      const notes = await Note.findAllForUser(userId, limit, offset);
 
       res.json({
         success: true,
@@ -72,8 +74,16 @@ const notesController = {
         });
       }
 
-      // Cualquier usuario puede ver cualquier nota
+      const userId = req.user.id;
       const note = await Note.findById(id);
+      
+      // Check if user can access this note
+      if (note && !(await Note.canUserAccess(id, userId))) {
+        return res.status(403).json({
+          success: false,
+          message: 'Access denied: This is a private note'
+        });
+      }
       
       if (!note) {
         return res.status(404).json({
@@ -108,7 +118,7 @@ const notesController = {
   async updateNote(req, res) {
     try {
       const { id } = req.params;
-      const { title, summary, content, tags, images } = req.body;
+      const { title, summary, content, tags, images, isPrivate } = req.body;
       const userId = req.user.id;
 
       const existingNote = await Note.findById(id);
@@ -119,14 +129,21 @@ const notesController = {
         });
       }
 
-      // Allow any authenticated user to edit any note (collaborative knowledge base)
+      // Check if user can access/edit this note
+      if (!(await Note.canUserAccess(id, userId))) {
+        return res.status(403).json({
+          success: false,
+          message: 'Access denied: Cannot edit private note'
+        });
+      }
 
       const updateData = {
         title: title ?? existingNote.title,
         summary: summary ?? existingNote.summary,
         content: content ?? existingNote.content,
         tags: tags ? tags.map(tag => tag.toLowerCase().trim()) : existingNote.tags,
-        images: images ?? existingNote.images
+        images: images ?? existingNote.images,
+        isPrivate: isPrivate ?? existingNote.is_private
       };
 
       const updatedNote = await Note.update(id, updateData);
@@ -156,6 +173,15 @@ const notesController = {
   async deleteNote(req, res) {
     try {
       const { id } = req.params;
+      const userId = req.user.id;
+
+      // Check if user can delete this note
+      if (!(await Note.canUserAccess(id, userId))) {
+        return res.status(403).json({
+          success: false,
+          message: 'Access denied: Cannot delete private note'
+        });
+      }
 
       const deletedNote = await Note.delete(id);
       
@@ -192,8 +218,9 @@ const notesController = {
         });
       }
 
-      // Buscar en todas las notas de todos los usuarios
-      const notes = await Note.search(q.trim(), limit);
+      const userId = req.user.id;
+      // Buscar en notas públicas + notas privadas del usuario actual
+      const notes = await Note.search(q.trim(), userId, limit);
 
       res.json({
         success: true,
@@ -211,8 +238,9 @@ const notesController = {
 
   async getUserTags(req, res) {
     try {
-      // Mostrar todos los tags de todas las notas
-      const tags = await Note.getAllTags();
+      const userId = req.user.id;
+      // Mostrar tags de notas públicas + notas privadas del usuario
+      const tags = await Note.getAllTagsForUser(userId);
 
       res.json({
         success: true,
@@ -235,8 +263,9 @@ const notesController = {
       const limit = parseInt(req.query.limit) || 20;
       const offset = (page - 1) * limit;
 
-      // Mostrar notas con el tag de todos los usuarios
-      const notes = await Note.findByTag(tag, limit, offset);
+      const userId = req.user.id;
+      // Mostrar notas con el tag (públicas + privadas del usuario)
+      const notes = await Note.findByTag(tag, userId, limit, offset);
 
       res.json({
         success: true,
@@ -296,7 +325,8 @@ const notesController = {
             summary: noteData.summary?.trim() || null, // Your TAG field
             content: noteData.content?.trim() || null,  // Your NOTA field
             tags: [], // Empty array for now, can add later if needed
-            images: null
+            images: null,
+            isPrivate: noteData.isPrivate || false // Allow import of private notes
           };
 
           await Note.create(mappedNote);

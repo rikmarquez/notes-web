@@ -128,13 +128,20 @@ const SearchResults = ({ searchQuery, onNoteClick, onClose }) => {
             onClick={() => handleResultClick(note)}
           >
             <div className="flex flex-col h-full">
-              {/* Title */}
-              <h4 
-                className="font-semibold text-gray-900 mb-2 line-clamp-2"
-                dangerouslySetInnerHTML={{
-                  __html: highlightSearchTerm(note.title, searchQuery)
-                }}
-              />
+              {/* Title with privacy indicator */}
+              <div className="flex items-start justify-between gap-2 mb-2">
+                <h4 
+                  className="font-semibold text-gray-900 line-clamp-2 flex-1"
+                  dangerouslySetInnerHTML={{
+                    __html: highlightSearchTerm(note.title, searchQuery)
+                  }}
+                />
+                {note.is_private && (
+                  <div className="flex-shrink-0 bg-red-100 text-red-800 text-xs px-1.5 py-0.5 rounded-full flex items-center gap-1">
+                    🔒 <span>Privado</span>
+                  </div>
+                )}
+              </div>
               
               {/* Content preview */}
               <p 
