@@ -82,23 +82,17 @@ const attachmentsService = {
     if (mimeType.includes('excel') || mimeType.includes('sheet')) return '📊';
     if (mimeType.includes('image')) return '🖼️';
     if (mimeType.includes('text')) return '📄';
+    if (mimeType.includes('sql') || mimeType === 'application/sql') return '🗃️';
+    if (mimeType.includes('tar') || mimeType.includes('archive')) return '🗜️';
+    if (mimeType.includes('zip') || mimeType.includes('compressed')) return '🗜️';
     return '📎';
   },
 
-  // Validar tipo de archivo
+  // Validar tipo de archivo - ahora permite todos los tipos
   isValidFileType: (file) => {
-    const allowedTypes = [
-      'application/pdf',
-      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-      'application/msword',
-      'text/plain',
-      'image/jpeg',
-      'image/png',
-      'image/gif',
-      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-      'application/vnd.ms-excel'
-    ];
-    return allowedTypes.includes(file.type);
+    // Permitir todos los tipos de archivo
+    // Solo verificar que tenga un nombre válido
+    return file.name && file.name.trim().length > 0;
   },
 
   // Validar tamaño de archivo

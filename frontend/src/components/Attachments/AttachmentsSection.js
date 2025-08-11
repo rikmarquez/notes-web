@@ -33,7 +33,7 @@ const AttachmentsSection = ({ noteId, isEditing }) => {
     for (const file of fileArray) {
       // Validaciones
       if (!attachmentsService.isValidFileType(file)) {
-        alert(`Tipo de archivo no permitido: ${file.name}`);
+        alert(`Archivo inválido: ${file.name}`);
         continue;
       }
       
@@ -139,7 +139,7 @@ const AttachmentsSection = ({ noteId, isEditing }) => {
             onChange={handleFileSelect}
             multiple
             style={{ display: 'none' }}
-            accept=".pdf,.docx,.doc,.txt,.jpg,.jpeg,.png,.gif,.xlsx,.xls"
+            accept="*"
           />
           
           <div
@@ -152,7 +152,7 @@ const AttachmentsSection = ({ noteId, isEditing }) => {
             <div className="drop-zone-content">
               <div className="drop-zone-icon">📁</div>
               <p>Arrastra archivos aquí o haz clic para seleccionar</p>
-              <small>PDF, Word, Excel, imágenes, texto (máx. 10MB)</small>
+              <small>Todos los tipos de archivo (máx. 10MB cada archivo)</small>
             </div>
           </div>
         </>

@@ -6,17 +6,8 @@ const Note = require('../models/Note');
 
 const UPLOAD_DIR = path.join(__dirname, '..', '..', 'uploads');
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
-const ALLOWED_MIME_TYPES = [
-  'application/pdf',
-  'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-  'application/msword',
-  'text/plain',
-  'image/jpeg',
-  'image/png',
-  'image/gif',
-  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-  'application/vnd.ms-excel'
-];
+// Permitir todos los tipos de archivo - eliminada restricción de MIME types
+// const ALLOWED_MIME_TYPES = [...] - Ya no se necesita, se permiten todos los tipos
 
 const storage = multer.diskStorage({
   destination: async (req, file, cb) => {
@@ -35,10 +26,12 @@ const storage = multer.diskStorage({
 });
 
 const fileFilter = (req, file, cb) => {
-  if (ALLOWED_MIME_TYPES.includes(file.mimetype)) {
+  // Permitir todos los tipos de archivo
+  // Solo validar que el archivo tenga un nombre válido
+  if (file.originalname && file.originalname.trim().length > 0) {
     cb(null, true);
   } else {
-    cb(new Error(`Tipo de archivo no permitido: ${file.mimetype}`), false);
+    cb(new Error('Nombre de archivo inválido'), false);
   }
 };
 
