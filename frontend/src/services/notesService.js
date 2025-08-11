@@ -1,7 +1,7 @@
 import api from './api';
 
 const notesService = {
-  async getNotes(page = 1, limit = 20) {
+  async getNotes(page = 1, limit = 10) {
     try {
       const response = await api.get(`/notes?page=${page}&limit=${limit}`);
       return response.data;
@@ -46,7 +46,7 @@ const notesService = {
     }
   },
 
-  async searchNotes(query, limit = 20) {
+  async searchNotes(query, limit = 10) {
     try {
       const response = await api.get(`/notes/search?q=${encodeURIComponent(query)}&limit=${limit}`);
       return response.data;
@@ -64,7 +64,7 @@ const notesService = {
     }
   },
 
-  async getNotesByTag(tag, page = 1, limit = 20) {
+  async getNotesByTag(tag, page = 1, limit = 10) {
     try {
       const response = await api.get(`/notes/tag/${encodeURIComponent(tag)}?page=${page}&limit=${limit}`);
       return response.data;

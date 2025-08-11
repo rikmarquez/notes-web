@@ -123,19 +123,69 @@ const NotesList = ({ searchQuery, selectedTag, onNoteClick, refreshTrigger }) =>
 
       {/* Load more button */}
       {hasMore && (
-        <div className="text-center mt-8">
+        <div 
+          className="text-center"
+          style={{
+            marginTop: '3rem',
+            marginBottom: '2rem',
+            paddingTop: '2rem',
+            paddingBottom: '2rem'
+          }}
+        >
           <button
             onClick={handleLoadMore}
             disabled={loading}
-            className="btn btn-outline"
+            style={{
+              backgroundColor: loading ? '#e5e7eb' : '#3b82f6',
+              color: 'white',
+              border: 'none',
+              borderRadius: '12px',
+              padding: '16px 32px',
+              fontSize: '16px',
+              fontWeight: '600',
+              cursor: loading ? 'not-allowed' : 'pointer',
+              boxShadow: '0 4px 12px rgba(59, 130, 246, 0.3)',
+              transition: 'all 0.3s ease',
+              minWidth: '200px',
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '8px'
+            }}
+            onMouseEnter={(e) => {
+              if (!loading) {
+                e.target.style.backgroundColor = '#2563eb';
+                e.target.style.transform = 'translateY(-2px)';
+                e.target.style.boxShadow = '0 6px 16px rgba(59, 130, 246, 0.4)';
+              }
+            }}
+            onMouseLeave={(e) => {
+              if (!loading) {
+                e.target.style.backgroundColor = '#3b82f6';
+                e.target.style.transform = 'translateY(0)';
+                e.target.style.boxShadow = '0 4px 12px rgba(59, 130, 246, 0.3)';
+              }
+            }}
           >
             {loading ? (
-              <span className="flex items-center gap-2">
-                <div className="spinner"></div>
-                Cargando...
-              </span>
+              <>
+                <div 
+                  className="spinner" 
+                  style={{ 
+                    width: '16px', 
+                    height: '16px',
+                    border: '2px solid #ffffff',
+                    borderTop: '2px solid transparent',
+                    borderRadius: '50%',
+                    animation: 'spin 1s linear infinite'
+                  }}
+                ></div>
+                Cargando notas...
+              </>
             ) : (
-              'Cargar más notas'
+              <>
+                📚 CARGAR MAS NOTAS
+              </>
             )}
           </button>
         </div>

@@ -90,12 +90,6 @@ const DashboardPage = () => {
                 ✏️ Nueva Nota
               </button>
               <button
-                onClick={() => handleTagFilter(null)}
-                className={`btn ${!selectedTag ? 'btn-primary' : 'btn-secondary'}`}
-              >
-                📋 Todas las notas
-              </button>
-              <button
                 onClick={() => setShowImportModal(true)}
                 className="btn btn-secondary"
                 title="Importar notas desde archivo JSON"
