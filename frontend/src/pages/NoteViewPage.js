@@ -277,6 +277,44 @@ const NoteViewPage = () => {
           </div>
         </div>
       </div>
+
+      {/* Floating back to dashboard button - always visible */}
+      <button
+        onClick={handleBack}
+        style={{
+          position: 'fixed',
+          bottom: '24px',
+          right: '24px',
+          backgroundColor: '#059669',
+          color: 'white',
+          padding: '16px',
+          borderRadius: '50%',
+          border: 'none',
+          fontSize: '18px',
+          cursor: 'pointer',
+          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.2)',
+          zIndex: 1000,
+          transition: 'all 0.3s ease',
+          width: '56px',
+          height: '56px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}
+        onMouseOver={(e) => {
+          e.target.style.backgroundColor = '#047857';
+          e.target.style.transform = 'scale(1.1)';
+          e.target.style.boxShadow = '0 6px 16px rgba(0, 0, 0, 0.3)';
+        }}
+        onMouseOut={(e) => {
+          e.target.style.backgroundColor = '#059669';
+          e.target.style.transform = 'scale(1)';
+          e.target.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.2)';
+        }}
+        title="Volver al dashboard"
+      >
+        🏠
+      </button>
     </div>
   );
 };
