@@ -301,14 +301,110 @@ const NoteEditor = ({ noteId, onSave, onCancel }) => {
 
         {/* Attachments */}
         {noteId && (
-          <AttachmentsSection 
-            noteId={noteId} 
+          <AttachmentsSection
+            noteId={noteId}
             isEditing={true}
           />
         )}
+
+        {/* Bottom action buttons - no need to scroll up */}
+        <div className="card" style={{
+          marginTop: '48px',
+          backgroundColor: '#f9fafb',
+          border: '1px solid #e5e7eb'
+        }}>
+          <div className="card-body" style={{ padding: '24px' }}>
+            <div className="flex gap-3 justify-end">
+              {onCancel && (
+                <button
+                  onClick={onCancel}
+                  disabled={loading}
+                  style={{
+                    backgroundColor: '#6b7280',
+                    color: 'white',
+                    padding: '12px 24px',
+                    borderRadius: '8px',
+                    border: 'none',
+                    fontSize: '16px',
+                    fontWeight: '600',
+                    cursor: loading ? 'not-allowed' : 'pointer',
+                    opacity: loading ? 0.6 : 1,
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    boxShadow: '0 2px 8px rgba(107, 114, 128, 0.3)',
+                    transition: 'all 0.3s ease'
+                  }}
+                  onMouseOver={(e) => {
+                    if (!loading) {
+                      e.currentTarget.style.backgroundColor = '#4b5563';
+                      e.currentTarget.style.transform = 'translateY(-2px)';
+                      e.currentTarget.style.boxShadow = '0 4px 12px rgba(107, 114, 128, 0.4)';
+                    }
+                  }}
+                  onMouseOut={(e) => {
+                    if (!loading) {
+                      e.currentTarget.style.backgroundColor = '#6b7280';
+                      e.currentTarget.style.transform = 'translateY(0)';
+                      e.currentTarget.style.boxShadow = '0 2px 8px rgba(107, 114, 128, 0.3)';
+                    }
+                  }}
+                >
+                  ✕ Cancelar
+                </button>
+              )}
+              <button
+                onClick={handleSave}
+                disabled={loading || !formData.title.trim()}
+                style={{
+                  backgroundColor: loading || !formData.title.trim() ? '#9ca3af' : '#10b981',
+                  color: 'white',
+                  padding: '12px 32px',
+                  borderRadius: '8px',
+                  border: 'none',
+                  fontSize: '16px',
+                  fontWeight: '600',
+                  cursor: loading || !formData.title.trim() ? 'not-allowed' : 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  boxShadow: loading || !formData.title.trim() ? 'none' : '0 2px 8px rgba(16, 185, 129, 0.3)',
+                  transition: 'all 0.3s ease',
+                  minWidth: '200px',
+                  justifyContent: 'center'
+                }}
+                onMouseOver={(e) => {
+                  if (!loading && formData.title.trim()) {
+                    e.currentTarget.style.backgroundColor = '#059669';
+                    e.currentTarget.style.transform = 'translateY(-2px)';
+                    e.currentTarget.style.boxShadow = '0 4px 12px rgba(16, 185, 129, 0.4)';
+                  }
+                }}
+                onMouseOut={(e) => {
+                  if (!loading && formData.title.trim()) {
+                    e.currentTarget.style.backgroundColor = '#10b981';
+                    e.currentTarget.style.transform = 'translateY(0)';
+                    e.currentTarget.style.boxShadow = '0 2px 8px rgba(16, 185, 129, 0.3)';
+                  }
+                }}
+              >
+                {loading ? (
+                  <>
+                    <div className="spinner" style={{ width: '16px', height: '16px' }}></div>
+                    Guardando...
+                  </>
+                ) : (
+                  <>
+                    💾 {noteId ? 'Actualizar Nota' : 'Crear Nota'}
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
 
-      {/* Mobile save button */}
+      {/* Mobile save button - hidden on desktop */}
       <div className="mt-8 mb-24 block md:hidden" style={{ marginBottom: '6rem' }}>
         <button
           onClick={handleSave}
