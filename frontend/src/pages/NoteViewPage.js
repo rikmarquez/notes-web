@@ -238,10 +238,47 @@ const NoteViewPage = () => {
                   </div>
                 </div>
                 <div className="card-body">
-                  <div 
+                  <div
                     className="prose prose-gray max-w-none"
                     dangerouslySetInnerHTML={{ __html: note.content }}
                   />
+                </div>
+                {/* Edit button below content - no need to scroll up */}
+                <div className="card-footer" style={{
+                  padding: '24px',
+                  borderTop: '1px solid #e5e7eb',
+                  backgroundColor: '#f9fafb'
+                }}>
+                  <button
+                    onClick={handleEdit}
+                    style={{
+                      backgroundColor: '#3b82f6',
+                      color: 'white',
+                      padding: '12px 24px',
+                      borderRadius: '8px',
+                      border: 'none',
+                      fontSize: '16px',
+                      fontWeight: '600',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '8px',
+                      boxShadow: '0 2px 8px rgba(59, 130, 246, 0.3)',
+                      transition: 'all 0.3s ease'
+                    }}
+                    onMouseOver={(e) => {
+                      e.currentTarget.style.backgroundColor = '#2563eb';
+                      e.currentTarget.style.transform = 'translateY(-2px)';
+                      e.currentTarget.style.boxShadow = '0 4px 12px rgba(59, 130, 246, 0.4)';
+                    }}
+                    onMouseOut={(e) => {
+                      e.currentTarget.style.backgroundColor = '#3b82f6';
+                      e.currentTarget.style.transform = 'translateY(0)';
+                      e.currentTarget.style.boxShadow = '0 2px 8px rgba(59, 130, 246, 0.3)';
+                    }}
+                  >
+                    ✏️ Editar esta nota
+                  </button>
                 </div>
               </div>
             )}
