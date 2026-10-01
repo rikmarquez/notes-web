@@ -5,6 +5,7 @@ Sistema web de gestión de conocimiento personal que permite capturar, organizar
 ## ✅ Características Principales
 
 - **📝 Editor WYSIWYG**: Editor rico para crear contenido con formato
+- **⬇️ Pegado de Markdown**: Pega texto en Markdown y se convierte automáticamente en texto con formato
 - **🔍 Búsqueda Inteligente**: Búsqueda en tiempo real por título, contenido y tags
 - **🏷️ Sistema de Tags**: Organización con tags y autocompletado
 - **🔗 Conexiones**: Crea relaciones tipificadas entre tus notas
@@ -26,6 +27,7 @@ Sistema web de gestión de conocimiento personal que permite capturar, organizar
 - **React 18**
 - **React Router** para navegación
 - **ReactQuill** para editor WYSIWYG
+- **marked** + **DOMPurify** para convertir y sanitizar Markdown pegado
 - **Axios** para llamadas HTTP
 
 ## 📁 Estructura del Proyecto
@@ -199,7 +201,8 @@ PORT=3001
 
 ### Editor Avanzado
 - Toolbar completa con formato de texto
-- Soporte para listas, enlaces e imágenes
+- Soporte para listas, citas, bloques de código, enlaces e imágenes
+- Pegado de Markdown con conversión automática a formato (Ctrl+Z para deshacer)
 - Auto-guardado cada 30 segundos
 
 ### Sistema de Tags
@@ -242,6 +245,14 @@ PORT=3001
 - **Formato**: Preserva saltos de línea del contenido original
 - **Compatibilidad**: Navegadores modernos con fallback para legacy
 - **UX**: Feedback visual con tooltips de confirmación
+
+### ✅ Pegado de Markdown
+- **Funcionalidad**: Al pegar texto en Markdown en el editor (crear o editar nota), se convierte automáticamente en texto con formato
+- **Soporta**: Títulos, negritas, cursivas, código en línea, enlaces, listas (incluidas sub-viñetas), citas y bloques de código
+- **Detección**: Solo se convierte si el texto tiene sintaxis Markdown; el pegado normal (Word, webs, texto plano) no cambia
+- **Deshacer**: Ctrl+Z revierte la conversión en un solo paso
+- **Seguridad**: El HTML generado se sanitiza con DOMPurify
+- **Limitaciones**: Las tablas quedan como texto y las casillas de tareas (`- [ ]`) como viñetas normales
 
 ## 🔧 Aprendizajes Técnicos
 
@@ -311,6 +322,6 @@ Desarrollado como sistema personal de gestión de conocimiento con enfoque en pr
 - ✅ Variables de entorno configuradas
 - ✅ Railway integrado
 
-**📅 Última actualización:** 2025-08-09
+**📅 Última actualización:** 2026-10-01
 
-**🔧 Versión actual:** 2.1.0 (con archivos adjuntos y copia al portapapeles)
+**🔧 Versión actual:** 2.2.0 (con pegado de Markdown)
