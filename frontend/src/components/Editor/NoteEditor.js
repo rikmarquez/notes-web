@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import TagInput from '../Tags/TagInput';
 import AttachmentsSection from '../Attachments/AttachmentsSection';
 import notesService from '../../services/notesService';
 import { getErrorMessage } from '../../utils/helpers';
+import { attachMarkdownPaste } from '../../utils/markdownPaste';
 
 const NoteEditor = ({ noteId, onSave, onCancel }) => {
   const [formData, setFormData] = useState({
@@ -18,6 +19,7 @@ const NoteEditor = ({ noteId, onSave, onCancel }) => {
   const [loadingNote, setLoadingNote] = useState(!!noteId);
   const [error, setError] = useState('');
   const [saved, setSaved] = useState(false);
+  const quillRef = useRef(null);
 
   // ReactQuill configuration
   const quillModules = {
@@ -26,6 +28,7 @@ const NoteEditor = ({ noteId, onSave, onCancel }) => {
       ['bold', 'italic', 'underline', 'strike'],
       [{ 'color': [] }, { 'background': [] }],
       [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+      ['blockquote', 'code-block'],
       [{ 'align': [] }],
       ['link', 'image'],
       ['clean']
@@ -34,9 +37,16 @@ const NoteEditor = ({ noteId, onSave, onCancel }) => {
 
   const quillFormats = [
     'header', 'bold', 'italic', 'underline', 'strike',
-    'color', 'background', 'list', 'bullet', 'align',
+    'color', 'background', 'list', 'bullet', 'indent', 'align',
+    'blockquote', 'code-block', 'code',
     'link', 'image'
   ];
+
+  // Convert pasted markdown into formatted text (create and edit modes)
+  useEffect(() => {
+    if (loadingNote || !quillRef.current) return;
+    return attachMarkdownPaste(quillRef.current.getEditor());
+  }, [loadingNote]);
 
   // Load existing note if editing
   useEffect(() => {
@@ -256,6 +266,7 @@ const NoteEditor = ({ noteId, onSave, onCancel }) => {
           </label>
           <div className="border border-gray-300 rounded-lg overflow-hidden">
             <ReactQuill
+              ref={quillRef}
               value={formData.content}
               onChange={(content) => handleInputChange('content', content)}
               modules={quillModules}
@@ -264,6 +275,9 @@ const NoteEditor = ({ noteId, onSave, onCancel }) => {
               style={{ minHeight: '300px' }}
               readOnly={loading}
             />
+          </div>
+          <div className="text-sm text-gray-500 mt-1">
+            💡 Puedes pegar texto en Markdown y se convertirá automáticamente en texto con formato (Ctrl+Z para deshacer).
           </div>
         </div>
 
