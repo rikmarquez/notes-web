@@ -174,7 +174,7 @@ const NoteEditor = ({ noteId, onSave, onCancel }) => {
   const saveLabel = noteId ? 'Actualizar nota' : 'Crear nota';
 
   return (
-    <div className="page-narrow">
+    <div className="page-wide">
       {/* Header */}
       <div className="page-head">
         <h1 className="page-title page-title-sm">

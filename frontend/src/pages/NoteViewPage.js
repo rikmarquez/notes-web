@@ -96,7 +96,7 @@ const NoteViewPage = () => {
       <div className="app-shell">
         <Header />
         <main className="container page">
-          <div className="page-narrow">
+          <div className="page-wide">
             <div className="alert alert-error">
               <Icon name="alert" />
               {error || 'Nota no encontrada'}
@@ -118,7 +118,7 @@ const NoteViewPage = () => {
       <Header />
 
       <main className="container page">
-        <div className="page-narrow">
+        <div className="page-wide">
           {/* Navigation */}
           <button onClick={handleBack} className="back-link">
             <Icon name="arrow-left" size={16} />
