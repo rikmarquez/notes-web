@@ -20,6 +20,8 @@ const NoteEditor = ({ noteId, onSave, onCancel }) => {
   const [error, setError] = useState('');
   const [saved, setSaved] = useState(false);
   const quillRef = useRef(null);
+  const formDataRef = useRef(formData);
+  formDataRef.current = formData;
 
   // ReactQuill configuration
   const quillModules = {
@@ -106,8 +108,9 @@ const NoteEditor = ({ noteId, onSave, onCancel }) => {
     return true;
   };
 
-  // Save note
-  const handleSave = async () => {
+  // Save note. With { silent: true } (auto-save) the form stays editable
+  // and onSave is not called, so the user is not navigated away.
+  const handleSave = async ({ silent = false } = {}) => {
     setError('');
     
     if (!validateForm()) {
@@ -115,8 +118,10 @@ const NoteEditor = ({ noteId, onSave, onCancel }) => {
     }
 
     try {
-      setLoading(true);
-      
+      if (!silent) {
+        setLoading(true);
+      }
+
       const noteData = {
         title: formData.title.trim(),
         summary: formData.summary.trim() || null,
@@ -134,8 +139,11 @@ const NoteEditor = ({ noteId, onSave, onCancel }) => {
 
       if (response.success) {
         console.log('Update response:', response); // Debug log
-        setSaved(true);
-        if (onSave) {
+        // Edits made while a silent save was in flight are still unsaved
+        if (!silent || formDataRef.current === formData) {
+          setSaved(true);
+        }
+        if (onSave && !silent) {
           onSave(response.data.note);
         }
       } else {
@@ -152,9 +160,9 @@ const NoteEditor = ({ noteId, onSave, onCancel }) => {
   useEffect(() => {
     const autoSaveInterval = setInterval(() => {
       if (noteId && formData.title.trim() && !loading && !saved) {
-        handleSave();
+        handleSave({ silent: true });
       }
-    }, 30000); // Auto-save every 30 seconds
+    }, 30000); // Auto-save after 30 seconds without changes
 
     return () => clearInterval(autoSaveInterval);
   }, [formData, noteId, loading, saved]);
@@ -204,7 +212,7 @@ const NoteEditor = ({ noteId, onSave, onCancel }) => {
         </div>
         
         {saved && (
-          <div className="mt-2 text-green-600 text-sm">
+          <div className="mt-2 text-sm status-ok">
             ✅ Nota guardada automáticamente
           </div>
         )}
