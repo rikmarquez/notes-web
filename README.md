@@ -11,7 +11,9 @@ Sistema web de gestión de conocimiento personal que permite capturar, organizar
 - **🔗 Conexiones**: Crea relaciones tipificadas entre tus notas
 - **💭 Reflexiones Personales**: Espacio dedicado para tus insights personales
 - **🔐 Autenticación Segura**: Sistema JWT con email/password + **auto-login tras registro**
-- **📎 Archivos Adjuntos**: Sistema completo de gestión de archivos (PDF, Word, Excel, imágenes)
+- **🔒 Notas Privadas**: Las notas son visibles para todos los usuarios por defecto; cada nota puede marcarse como privada
+- **📥 Importación Masiva**: Importa notas desde un archivo JSON
+- **📎 Archivos Adjuntos**: Sube, descarga y elimina archivos de cualquier tipo (hasta 10MB cada uno)
 - **📋 Copia al Portapapeles**: Función para copiar contenido de notas con preservación de formato
 - **🎨 Identidad de Marca**: Sistema de diseño propio (paleta, tipografía, iconos y logo) en escritorio y móvil
 - **📱 Instalable en Móvil**: Se puede añadir a la pantalla de inicio con el isotipo como icono
@@ -115,7 +117,10 @@ npm install
 
 ### 4. Configurar Base de Datos
 
-Ejecutar el script SQL en `backend/src/config/database-init.sql` en tu base de datos PostgreSQL.
+Ejecutar en tu base de datos PostgreSQL, en este orden:
+
+1. `backend/src/config/database-init.sql` - Tablas e índices
+2. `backend/src/config/migration-privacy.sql` - Columna `is_private` para notas privadas
 
 ### 5. Ejecutar en Desarrollo
 
@@ -181,8 +186,11 @@ PORT=3001
 - `DELETE /api/notes/:id` - Eliminar nota
 - `GET /api/notes/search?q=query` - Buscar notas
 - `GET /api/notes/tags` - Obtener tags del usuario
+- `GET /api/notes/tag/:tag` - Listar notas por tag
+- `POST /api/notes/import` - Importar notas desde JSON (`{ "notes": [{ "title", "summary", "content" }] }`)
 
 ### Conexiones
+- `GET /api/connections/types` - Listar tipos de conexión
 - `GET /api/connections/note/:noteId` - Obtener conexiones de una nota
 - `POST /api/connections/note/:noteId` - Crear conexión
 - `DELETE /api/connections/:connectionId` - Eliminar conexión
@@ -237,10 +245,14 @@ PORT=3001
 - Tokens JWT con expiración
 - Validación de datos en frontend y backend
 - Rate limiting en API
-- Sanitización de HTML
-- CORS configurado para producción
-- Validación de tipos MIME en uploads
-- Storage seguro fuera del directorio público
+- Sanitización con DOMPurify del HTML generado al pegar Markdown
+- Control de acceso a notas privadas en cada operación
+- Límite de 10MB y validación de nombre en uploads (se acepta cualquier tipo de archivo)
+- Archivos guardados en `backend/uploads/`, fuera del directorio público
+
+**Limitaciones conocidas:**
+- CORS acepta cualquier origen (`CORS_ORIGINS` no restringe en la práctica)
+- El contenido de las notas se muestra como HTML sin sanitizar en el servidor ni al renderizar
 
 ## 🆕 Nuevas Características (Implementadas)
 
@@ -250,7 +262,7 @@ PORT=3001
 - Experiencia de usuario mejorada sin pasos adicionales
 
 ### ✅ Sistema de Archivos Adjuntos
-- **Tipos soportados**: PDF, Word, Excel, imágenes (hasta 10MB)
+- **Tipos soportados**: Cualquier tipo de archivo (hasta 10MB cada uno)
 - **Funcionalidades**: Upload, descarga, eliminación
 - **Seguridad**: Solo el propietario de la nota puede gestionar archivos
 - **UX**: Drag & drop funcional con feedback visual
@@ -286,7 +298,7 @@ PORT=3001
 
 ### Gestión de Archivos
 - **Multer**: Configuración para manejo seguro de uploads
-- **Validaciones**: Doble validación (frontend + backend) para tipos y tamaños
+- **Validaciones**: Doble validación (frontend + backend) de nombre y tamaño; no se restringe el tipo
 - **Storage**: Implementación local con nombres únicos para evitar colisiones
 - **Limpieza**: Auto-cleanup de archivos huérfanos en caso de errores
 
@@ -316,7 +328,7 @@ curl https://your-app.railway.app/health
 
 ## 📝 Licencia
 
-Este proyecto está bajo la Licencia MIT - ver el archivo [LICENSE](LICENSE) para detalles.
+Este proyecto está bajo la Licencia MIT, según se declara en `package.json`.
 
 ## 👨‍💻 Desarrollo
 
@@ -324,7 +336,8 @@ Desarrollado como sistema personal de gestión de conocimiento con enfoque en pr
 
 ## 🗺️ Roadmap Futuras Funcionalidades
 
-- [ ] Sistema de importación (JSON, CSV, Markdown)
+- [x] Importación desde JSON
+- [ ] Importación desde CSV y Markdown
 - [ ] Vista de grafo de conexiones
 - [ ] Exportación a PDF/Markdown
 - [ ] Categorías/carpetas
