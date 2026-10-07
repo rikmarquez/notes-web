@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import notesService from '../../services/notesService';
 import { normalizeTags, parseTagsInput } from '../../utils/helpers';
+import Icon from '../UI/Icon';
 
 const TagInput = ({ tags, onChange, placeholder = "Agrega tags..." }) => {
   const [inputValue, setInputValue] = useState('');
@@ -129,7 +130,7 @@ const TagInput = ({ tags, onChange, placeholder = "Agrega tags..." }) => {
   };
 
   return (
-    <div className="relative" ref={containerRef}>
+    <div className="search-container" ref={containerRef}>
       <div 
         className="tag-input-container"
         onClick={handleContainerClick}
@@ -144,9 +145,10 @@ const TagInput = ({ tags, onChange, placeholder = "Agrega tags..." }) => {
                 e.stopPropagation();
                 removeTag(index);
               }}
-              className="ml-2 text-red-500 hover:text-red-700"
+              className="tag-remove"
+              title={`Quitar ${tag}`}
             >
-              ×
+              <Icon name="x" size={14} />
             </button>
           </span>
         ))}
@@ -167,29 +169,25 @@ const TagInput = ({ tags, onChange, placeholder = "Agrega tags..." }) => {
 
       {/* Suggestions dropdown */}
       {showSuggestions && suggestions.length > 0 && (
-        <div className="absolute top-full left-0 right-0 bg-white border border-gray-300 border-t-0 rounded-b-md shadow-lg z-10">
+        <div className="dropdown">
           {suggestions.map((suggestion, index) => (
             <button
               key={suggestion}
               type="button"
               onClick={() => selectSuggestion(suggestion)}
-              className={`w-full text-left px-3 py-2 hover:bg-gray-100 ${
-                index === selectedSuggestion ? 'bg-blue-50 text-blue-700' : ''
-              }`}
+              className={`dropdown-item ${index === selectedSuggestion ? 'is-active' : ''}`}
             >
-              🏷️ {suggestion}
+              {suggestion}
             </button>
           ))}
         </div>
       )}
 
       {/* Helper text */}
-      <div className="text-xs text-gray-500 mt-1">
+      <div className="form-help">
         Presiona Enter o coma para agregar tags. Máximo 10 tags.
         {tags.length >= 10 && (
-          <span className="text-orange-600 font-medium">
-            {' '}Límite alcanzado.
-          </span>
+          <strong>{' '}Límite alcanzado.</strong>
         )}
       </div>
     </div>

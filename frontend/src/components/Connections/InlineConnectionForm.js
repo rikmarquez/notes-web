@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import notesService from '../../services/notesService';
 import { getConnectionTypeLabel, getTextPreview, getErrorMessage } from '../../utils/helpers';
 import { useDebounce } from '../../hooks/useDebounce';
+import Icon from '../UI/Icon';
 
 const InlineConnectionForm = ({ noteId, connectionTypes, onCreateConnection, onCancel }) => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -74,34 +75,35 @@ const InlineConnectionForm = ({ noteId, connectionTypes, onCreateConnection, onC
   };
 
   return (
-    <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 space-y-4">
-      <div className="flex justify-between items-center">
-        <h3 className="text-lg font-medium text-gray-900">
-          Crear Nueva Conexión
-        </h3>
+    <div className="panel form-group">
+      <div className="section-head">
+        <h3 className="section-title">Nueva conexión</h3>
         <button
           onClick={onCancel}
-          className="text-gray-400 hover:text-gray-600"
+          className="icon-btn"
+          title="Cancelar"
           disabled={loading}
         >
-          ✕
+          <Icon name="x" />
         </button>
       </div>
 
       {error && (
         <div className="alert alert-error">
+          <Icon name="alert" />
           {error}
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit}>
         {/* Search for notes */}
-        <div className="form-group">
-          <label className="form-label text-sm">
-            Buscar nota para conectar
-          </label>
-          <div className="relative">
+        {!selectedNote && (
+          <div className="form-group">
+            <label className="form-label" htmlFor="connection-search">
+              Buscar nota para conectar
+            </label>
             <input
+              id="connection-search"
               type="text"
               value={searchQuery}
               onChange={(e) => {
@@ -113,80 +115,67 @@ const InlineConnectionForm = ({ noteId, connectionTypes, onCreateConnection, onC
               disabled={loading}
               autoFocus
             />
-            
+
+            {/* Search results */}
+            {searchResults.length > 0 && (
+              <div className="dropdown dropdown-static">
+                {searchResults.map(note => (
+                  <div
+                    key={note.id}
+                    onClick={() => handleNoteSelect(note)}
+                    className="dropdown-item"
+                  >
+                    <div className="dropdown-item-title">
+                      {note.title}
+                    </div>
+                    <div className="dropdown-item-text">
+                      {getTextPreview(note.summary || note.content, 60)}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+
             {searching && (
-              <div className="absolute right-3 top-3">
-                <div className="spinner"></div>
+              <div className="form-help">Buscando...</div>
+            )}
+
+            {searchQuery.trim().length >= 2 && searchResults.length === 0 && !searching && (
+              <div className="form-help">
+                No se encontraron notas para "{searchQuery}"
               </div>
             )}
           </div>
-
-          {/* Search results */}
-          {searchResults.length > 0 && !selectedNote && (
-            <div className="mt-2 border border-gray-300 rounded-md max-h-32 overflow-y-auto bg-white">
-              {searchResults.map(note => (
-                <div
-                  key={note.id}
-                  onClick={() => handleNoteSelect(note)}
-                  className="p-3 hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-b-0"
-                >
-                  <div className="font-medium text-gray-900 mb-1 text-sm">
-                    {note.title}
-                  </div>
-                  <div className="text-xs text-gray-600">
-                    {getTextPreview(note.summary || note.content, 60)}
-                  </div>
-                  {note.tags && note.tags.length > 0 && (
-                    <div className="flex flex-wrap gap-1 mt-1">
-                      {note.tags.slice(0, 2).map((tag, index) => (
-                        <span key={index} className="tag text-xs">
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          )}
-
-          {searchQuery.trim().length >= 2 && searchResults.length === 0 && !searching && (
-            <div className="mt-2 text-sm text-gray-500">
-              No se encontraron notas para "{searchQuery}"
-            </div>
-          )}
-        </div>
+        )}
 
         {/* Selected note preview */}
         {selectedNote && (
-          <div className="p-3 bg-green-50 border border-green-200 rounded-md">
-            <div className="flex items-start justify-between">
-              <div className="flex-1">
-                <div className="font-medium text-green-900 text-sm">
-                  ✓ Nota seleccionada: {selectedNote.title}
-                </div>
-                <div className="text-xs text-green-700 mt-1">
-                  {getTextPreview(selectedNote.summary || selectedNote.content, 80)}
-                </div>
+          <div className="selected-note">
+            <Icon name="check" />
+            <div className="row-text" style={{ flex: 1 }}>
+              <div className="row-title">{selectedNote.title}</div>
+              <div className="row-sub">
+                {getTextPreview(selectedNote.summary || selectedNote.content, 80)}
               </div>
-              <button
-                type="button"
-                onClick={() => {
-                  setSelectedNote(null);
-                  setSearchQuery('');
-                }}
-                className="text-green-600 hover:text-green-800 ml-2"
-                disabled={loading}
-              >
-                ✕
-              </button>
             </div>
+            <button
+              type="button"
+              onClick={() => {
+                setSelectedNote(null);
+                setSearchQuery('');
+              }}
+              className="icon-btn"
+              title="Cambiar nota"
+              disabled={loading}
+            >
+              <Icon name="x" />
+            </button>
           </div>
         )}
 
         {/* Connection type */}
         <div className="form-group">
-          <label className="form-label text-sm">
+          <label className="form-label">
             Tipo de conexión
           </label>
           <select
@@ -204,11 +193,11 @@ const InlineConnectionForm = ({ noteId, connectionTypes, onCreateConnection, onC
         </div>
 
         {/* Submit buttons */}
-        <div className="flex justify-end gap-2 pt-2">
+        <div className="form-actions">
           <button
             type="button"
             onClick={onCancel}
-            className="btn btn-outline btn-sm"
+            className="btn btn-ghost btn-sm"
             disabled={loading}
           >
             Cancelar
@@ -219,12 +208,12 @@ const InlineConnectionForm = ({ noteId, connectionTypes, onCreateConnection, onC
             disabled={loading || !selectedNote}
           >
             {loading ? (
-              <span className="flex items-center gap-2">
-                <div className="spinner"></div>
+              <>
+                <span className="spinner"></span>
                 Creando...
-              </span>
+              </>
             ) : (
-              'Crear Conexión'
+              'Crear conexión'
             )}
           </button>
         </div>

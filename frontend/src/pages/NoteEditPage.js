@@ -32,18 +32,16 @@ const NoteEditPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <Header showSearchInHeader={false} />
-      
-      <div className="pt-16"> {/* Account for fixed header */}
-        <div className="container py-6 pb-24" style={{ paddingBottom: '6rem' }}>
-          <NoteEditor
-            noteId={isNewNote ? null : id}
-            onSave={handleSave}
-            onCancel={handleCancel}
-          />
-        </div>
-      </div>
+    <div className="app-shell">
+      <Header />
+
+      <main className="container page">
+        <NoteEditor
+          noteId={isNewNote ? null : id}
+          onSave={handleSave}
+          onCancel={handleCancel}
+        />
+      </main>
     </div>
   );
 };

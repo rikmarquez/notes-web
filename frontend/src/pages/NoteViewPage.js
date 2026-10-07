@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import Header from '../components/Layout/Header';
 import ConnectionsSection from '../components/Connections/ConnectionsSection';
 import AttachmentsSection from '../components/Attachments/AttachmentsSection';
+import Icon from '../components/UI/Icon';
 import notesService from '../services/notesService';
 import { formatDateTime, getErrorMessage, copyToClipboard, formatNoteForCopy } from '../utils/helpers';
 
@@ -19,9 +20,9 @@ const NoteViewPage = () => {
       try {
         setLoading(true);
         setError('');
-        
+
         const response = await notesService.getNote(id);
-        
+
         if (response.success) {
           setNote(response.data.note);
         } else {
@@ -71,286 +72,168 @@ const NoteViewPage = () => {
 
     const contentToCopy = formatNoteForCopy(note);
     const result = await copyToClipboard(contentToCopy);
-    
+
     setCopyFeedback(result.message);
     setTimeout(() => setCopyFeedback(''), 2000);
   };
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50">
-        <Header showSearchInHeader={false} />
-        <div className="pt-16">
-          <div className="container py-6">
-            <div className="flex justify-center items-center h-64">
-              <div className="spinner"></div>
-              <span className="ml-2">Cargando nota...</span>
-            </div>
+      <div className="app-shell">
+        <Header />
+        <main className="container page">
+          <div className="loading-row">
+            <div className="spinner"></div>
+            Cargando nota...
           </div>
-        </div>
+        </main>
       </div>
     );
   }
 
   if (error || !note) {
     return (
-      <div className="min-h-screen bg-gray-50">
-        <Header showSearchInHeader={false} />
-        <div className="pt-16">
-          <div className="container py-6">
+      <div className="app-shell">
+        <Header />
+        <main className="container page">
+          <div className="page-narrow">
             <div className="alert alert-error">
+              <Icon name="alert" />
               {error || 'Nota no encontrada'}
-              <button 
+              <button
                 onClick={handleBack}
-                className="btn btn-outline btn-sm ml-4"
+                className="btn btn-outline btn-sm"
               >
                 Volver al dashboard
               </button>
             </div>
           </div>
-        </div>
+        </main>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <Header showSearchInHeader={false} />
-      
-      <div className="pt-16">
-        <div className="container" style={{ paddingTop: '32px', paddingBottom: '64px' }}>
-          {/* Navigation */}
-          <div style={{ marginBottom: '32px' }}>
-            <button
-              onClick={handleBack}
-              style={{
-                backgroundColor: '#059669',
-                color: 'white',
-                padding: '12px 24px',
-                borderRadius: '8px',
-                border: 'none',
-                fontSize: '16px',
-                fontWeight: '500',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px',
-                transition: 'background-color 0.2s ease'
-              }}
-              onMouseOver={(e) => e.target.style.backgroundColor = '#047857'}
-              onMouseOut={(e) => e.target.style.backgroundColor = '#059669'}
-            >
-              ← Volver al dashboard
-            </button>
-          </div>
+    <div className="app-shell">
+      <Header />
 
-          <div className="max-w-4xl mx-auto">
-            {/* Header */}
-            <div className="card mb-6">
-              <div className="card-header">
-                {/* Title */}
-                <div className="mb-4">
-                  <div className="flex items-start justify-between gap-4 mb-2">
-                    <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 flex-1">
-                      {note.title}
-                    </h1>
-                    {note.is_private && (
-                      <div className="flex-shrink-0 bg-red-100 text-red-800 px-3 py-2 rounded-lg flex items-center gap-2 border border-red-200">
-                        🔒 <span className="font-medium">Nota Privada</span>
-                      </div>
-                    )}
-                  </div>
-                  {note.is_private && (
-                    <div className="text-sm text-red-700 bg-red-50 p-3 rounded-lg border border-red-200">
-                      <strong>Solo tú puedes ver esta nota.</strong> Esta nota contiene información privada y no es visible para otros usuarios.
+      <main className="container page">
+        <div className="page-narrow">
+          {/* Navigation */}
+          <button onClick={handleBack} className="back-link">
+            <Icon name="arrow-left" size={16} />
+            Volver al dashboard
+          </button>
+
+          {/* Header */}
+          <header className="note-head">
+            {note.is_private && (
+              <span
+                className="chip-lock"
+                title="Solo tú puedes ver esta nota. No es visible para otros usuarios."
+              >
+                <Icon name="lock" size={12} />
+                Nota privada · solo tú puedes verla
+              </span>
+            )}
+
+            <h1 className="note-title">{note.title}</h1>
+
+            {/* Metadata */}
+            <div className="note-meta">
+              <span>Creada el {formatDateTime(note.created_at)}</span>
+              {note.created_at !== note.updated_at && (
+                <span>Editada el {formatDateTime(note.updated_at)}</span>
+              )}
+            </div>
+
+            {/* Action Buttons */}
+            <div className="note-actions">
+              <button onClick={handleEdit} className="btn btn-primary btn-sm">
+                <Icon name="edit" size={16} />
+                Editar
+              </button>
+              {note.content && (
+                <div className="tooltip-anchor">
+                  <button
+                    onClick={handleCopyContent}
+                    className="btn btn-secondary btn-sm"
+                    title="Copiar contenido al portapapeles"
+                  >
+                    <Icon name="copy" size={16} />
+                    Copiar
+                  </button>
+                  {copyFeedback && (
+                    <div className="tooltip" role="status">
+                      {copyFeedback}
                     </div>
                   )}
                 </div>
-
-                {/* Action Buttons */}
-                <div className="mb-4 flex gap-3">
-                  <button
-                    onClick={handleEdit}
-                    className="btn btn-primary btn-sm"
-                  >
-                    ✏️ Editar
-                  </button>
-                  <button
-                    onClick={handleDelete}
-                    className="btn btn-danger btn-sm"
-                  >
-                    🗑️ Eliminar
-                  </button>
-                </div>
-                
-                {/* Metadata */}
-                <div className="flex flex-wrap gap-3 sm:gap-4 text-xs sm:text-sm text-gray-600">
-                  <span>
-                    📅 Creado: {formatDateTime(note.created_at)}
-                  </span>
-                  {note.created_at !== note.updated_at && (
-                    <span>
-                      ✏️ Editado: {formatDateTime(note.updated_at)}
-                    </span>
-                  )}
-                </div>
-              </div>
+              )}
+              <button onClick={handleDelete} className="btn btn-danger btn-sm">
+                <Icon name="trash" size={16} />
+                Eliminar
+              </button>
             </div>
+          </header>
 
-            {/* Summary */}
-            {note.summary && (
-              <div className="card mb-6">
-                <div className="card-header">
-                  <h2 className="text-lg font-semibold text-gray-800">
-                    💭 Mi reflexión sobre esta idea
-                  </h2>
-                </div>
-                <div className="card-body">
-                  <div className="prose prose-gray max-w-none">
-                    <p className="text-gray-700 italic leading-relaxed">
-                      {note.summary}
-                    </p>
-                  </div>
-                </div>
+          {/* Summary */}
+          {note.summary && (
+            <aside className="reflection">
+              <h2 className="eyebrow">Mi reflexión sobre esta idea</h2>
+              <p>{note.summary}</p>
+            </aside>
+          )}
+
+          {/* Main Content */}
+          {note.content && (
+            <section className="card note-body">
+              <div className="card-body">
+                <div
+                  className="prose"
+                  dangerouslySetInnerHTML={{ __html: note.content }}
+                />
               </div>
-            )}
-
-            {/* Main Content */}
-            {note.content && (
-              <div className="card mb-6">
-                <div className="card-header flex justify-between items-center">
-                  <h2 className="text-lg font-semibold text-gray-800">
-                    📝 Contenido Principal
-                  </h2>
-                  <div className="relative">
-                    <button
-                      onClick={handleCopyContent}
-                      className="btn btn-outline btn-sm flex items-center gap-2 hover:bg-gray-100 transition-colors"
-                      title="Copiar contenido al portapapeles"
-                    >
-                      📋 Copiar
-                    </button>
-                    {copyFeedback && (
-                      <div className="absolute top-full right-0 mt-2 px-3 py-2 bg-gray-800 text-white text-sm rounded shadow-lg whitespace-nowrap z-10">
-                        {copyFeedback}
-                      </div>
-                    )}
-                  </div>
-                </div>
-                <div className="card-body">
-                  <div
-                    className="prose prose-gray max-w-none"
-                    dangerouslySetInnerHTML={{ __html: note.content }}
-                  />
-                </div>
-                {/* Edit button below content - no need to scroll up */}
-                <div className="card-footer" style={{
-                  padding: '24px',
-                  borderTop: '1px solid #e5e7eb',
-                  backgroundColor: '#f9fafb'
-                }}>
-                  <button
-                    onClick={handleEdit}
-                    style={{
-                      backgroundColor: '#3b82f6',
-                      color: 'white',
-                      padding: '12px 24px',
-                      borderRadius: '8px',
-                      border: 'none',
-                      fontSize: '16px',
-                      fontWeight: '600',
-                      cursor: 'pointer',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '8px',
-                      boxShadow: '0 2px 8px rgba(59, 130, 246, 0.3)',
-                      transition: 'all 0.3s ease'
-                    }}
-                    onMouseOver={(e) => {
-                      e.currentTarget.style.backgroundColor = '#2563eb';
-                      e.currentTarget.style.transform = 'translateY(-2px)';
-                      e.currentTarget.style.boxShadow = '0 4px 12px rgba(59, 130, 246, 0.4)';
-                    }}
-                    onMouseOut={(e) => {
-                      e.currentTarget.style.backgroundColor = '#3b82f6';
-                      e.currentTarget.style.transform = 'translateY(0)';
-                      e.currentTarget.style.boxShadow = '0 2px 8px rgba(59, 130, 246, 0.3)';
-                    }}
-                  >
-                    ✏️ Editar esta nota
-                  </button>
-                </div>
+              {/* Edit button below content - no need to scroll up */}
+              <div className="card-footer">
+                <button onClick={handleEdit} className="btn btn-secondary">
+                  <Icon name="edit" />
+                  Editar esta nota
+                </button>
               </div>
-            )}
+            </section>
+          )}
 
-            {/* Tags */}
-            {note.tags && note.tags.length > 0 && (
-              <div className="card mb-6">
-                <div className="card-header">
-                  <h2 className="text-lg font-semibold text-gray-800">
-                    🏷️ Tags
-                  </h2>
-                </div>
-                <div className="card-body">
-                  <div className="flex flex-wrap gap-2">
-                    {note.tags.map((tag, index) => (
-                      <span key={index} className="tag">
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            )}
+          {/* Tags */}
+          {note.tags && note.tags.length > 0 && (
+            <div className="tag-row note-tags">
+              {note.tags.map((tag, index) => (
+                <span key={index} className="tag">
+                  {tag}
+                </span>
+              ))}
+            </div>
+          )}
 
-            {/* Attachments */}
-            <AttachmentsSection 
-              noteId={id} 
-              isEditing={false}
-            />
+          {/* Attachments */}
+          <AttachmentsSection
+            noteId={id}
+            isEditing={false}
+          />
 
-            {/* Connections */}
-            <ConnectionsSection noteId={id} />
-          </div>
+          {/* Connections */}
+          <ConnectionsSection noteId={id} />
         </div>
-      </div>
+      </main>
 
       {/* Floating back to dashboard button - always visible */}
       <button
         onClick={handleBack}
-        style={{
-          position: 'fixed',
-          bottom: '24px',
-          right: '24px',
-          backgroundColor: '#059669',
-          color: 'white',
-          padding: '16px',
-          borderRadius: '50%',
-          border: 'none',
-          fontSize: '18px',
-          cursor: 'pointer',
-          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.2)',
-          zIndex: 1000,
-          transition: 'all 0.3s ease',
-          width: '56px',
-          height: '56px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center'
-        }}
-        onMouseOver={(e) => {
-          e.target.style.backgroundColor = '#047857';
-          e.target.style.transform = 'scale(1.1)';
-          e.target.style.boxShadow = '0 6px 16px rgba(0, 0, 0, 0.3)';
-        }}
-        onMouseOut={(e) => {
-          e.target.style.backgroundColor = '#059669';
-          e.target.style.transform = 'scale(1)';
-          e.target.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.2)';
-        }}
+        className="fab"
         title="Volver al dashboard"
+        aria-label="Volver al dashboard"
       >
-        🏠
+        <Icon name="home" size={22} />
       </button>
     </div>
   );

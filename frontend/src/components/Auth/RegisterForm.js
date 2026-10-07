@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../hooks/useAuth';
 import { validateEmail, validatePassword, getErrorMessage } from '../../utils/helpers';
+import Icon from '../UI/Icon';
 
 const RegisterForm = ({ onSwitchToLogin }) => {
   const { register, loading } = useAuth();
@@ -79,128 +80,76 @@ const RegisterForm = ({ onSwitchToLogin }) => {
     }
   };
 
+  const fields = [
+    { name: 'email', type: 'email', label: 'Email *', placeholder: 'tu@email.com', autoComplete: 'email' },
+    { name: 'name', type: 'text', label: 'Nombre (opcional)', placeholder: 'Tu nombre', autoComplete: 'name' },
+    { name: 'password', type: 'password', label: 'Contraseña *', placeholder: 'Mínimo 6 caracteres', autoComplete: 'new-password' },
+    { name: 'confirmPassword', type: 'password', label: 'Confirmar contraseña *', placeholder: 'Repite tu contraseña', autoComplete: 'new-password' }
+  ];
+
   return (
-    <div className="card w-full max-w-md mx-auto">
-      <div className="card-header">
-        <h2 className="text-2xl font-bold text-center">Crear Cuenta</h2>
-        <p className="text-gray-600 text-center mt-2">
-          Únete y comienza a organizar tu conocimiento
-        </p>
-      </div>
+    <div>
+      <h2 className="auth-title">Crear cuenta</h2>
+      <p className="auth-sub">
+        Únete y comienza a organizar tu conocimiento
+      </p>
 
-      <div className="card-body">
-        {apiError && (
-          <div className="alert alert-error">
-            {apiError}
-          </div>
-        )}
+      {apiError && (
+        <div className="alert alert-error">
+          <Icon name="alert" />
+          {apiError}
+        </div>
+      )}
 
-        <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label htmlFor="email" className="form-label">
-              Email *
+      <form onSubmit={handleSubmit} noValidate>
+        {fields.map((field) => (
+          <div className="form-group" key={field.name}>
+            <label htmlFor={field.name} className="form-label">
+              {field.label}
             </label>
             <input
-              type="email"
-              id="email"
-              name="email"
-              value={formData.email}
+              type={field.type}
+              id={field.name}
+              name={field.name}
+              value={formData[field.name]}
               onChange={handleChange}
-              className={`form-input ${errors.email ? 'border-red-500' : ''}`}
-              placeholder="tu@email.com"
+              className={`form-input ${errors[field.name] ? 'is-invalid' : ''}`}
+              placeholder={field.placeholder}
+              autoComplete={field.autoComplete}
               disabled={loading}
             />
-            {errors.email && (
-              <p className="text-red-500 text-sm mt-1">{errors.email}</p>
+            {errors[field.name] && (
+              <p className="form-error">{errors[field.name]}</p>
             )}
           </div>
+        ))}
 
-          <div className="form-group">
-            <label htmlFor="name" className="form-label">
-              Nombre (opcional)
-            </label>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              className={`form-input ${errors.name ? 'border-red-500' : ''}`}
-              placeholder="Tu nombre"
-              disabled={loading}
-            />
-            {errors.name && (
-              <p className="text-red-500 text-sm mt-1">{errors.name}</p>
-            )}
-          </div>
+        <button
+          type="submit"
+          disabled={loading}
+          className="btn btn-primary btn-lg btn-block"
+        >
+          {loading ? (
+            <>
+              <span className="spinner"></span>
+              Creando cuenta...
+            </>
+          ) : (
+            'Crear cuenta'
+          )}
+        </button>
+      </form>
 
-          <div className="form-group">
-            <label htmlFor="password" className="form-label">
-              Contraseña *
-            </label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              className={`form-input ${errors.password ? 'border-red-500' : ''}`}
-              placeholder="Mínimo 6 caracteres"
-              disabled={loading}
-            />
-            {errors.password && (
-              <p className="text-red-500 text-sm mt-1">{errors.password}</p>
-            )}
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="confirmPassword" className="form-label">
-              Confirmar Contraseña *
-            </label>
-            <input
-              type="password"
-              id="confirmPassword"
-              name="confirmPassword"
-              value={formData.confirmPassword}
-              onChange={handleChange}
-              className={`form-input ${errors.confirmPassword ? 'border-red-500' : ''}`}
-              placeholder="Repite tu contraseña"
-              disabled={loading}
-            />
-            {errors.confirmPassword && (
-              <p className="text-red-500 text-sm mt-1">{errors.confirmPassword}</p>
-            )}
-          </div>
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="btn btn-primary w-full"
-          >
-            {loading ? (
-              <span className="flex items-center justify-center gap-2">
-                <div className="spinner"></div>
-                Creando cuenta...
-              </span>
-            ) : (
-              'Crear Cuenta'
-            )}
-          </button>
-        </form>
-      </div>
-
-      <div className="card-footer">
-        <p className="text-center text-gray-600">
-          ¿Ya tienes cuenta?{' '}
-          <button
-            onClick={onSwitchToLogin}
-            className="text-blue-600 hover:text-blue-700 font-medium"
-            disabled={loading}
-          >
-            Inicia sesión aquí
-          </button>
-        </p>
-      </div>
+      <p className="auth-switch">
+        ¿Ya tienes cuenta?{' '}
+        <button
+          onClick={onSwitchToLogin}
+          className="link-btn"
+          disabled={loading}
+        >
+          Inicia sesión aquí
+        </button>
+      </p>
     </div>
   );
 };

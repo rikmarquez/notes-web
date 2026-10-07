@@ -3,6 +3,7 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import TagInput from '../Tags/TagInput';
 import AttachmentsSection from '../Attachments/AttachmentsSection';
+import Icon from '../UI/Icon';
 import notesService from '../../services/notesService';
 import { getErrorMessage } from '../../utils/helpers';
 import { attachMarkdownPaste } from '../../utils/markdownPaste';
@@ -159,69 +160,66 @@ const NoteEditor = ({ noteId, onSave, onCancel }) => {
     return () => clearInterval(autoSaveInterval);
   }, [formData, noteId, loading, saved]);
 
+
   if (loadingNote) {
     return (
-      <div className="flex justify-center items-center h-64">
+      <div className="loading-row">
         <div className="spinner"></div>
-        <span className="ml-2">Cargando nota...</span>
+        Cargando nota...
       </div>
     );
   }
 
+  const canSave = !loading && formData.title.trim();
+  const saveLabel = noteId ? 'Actualizar nota' : 'Crear nota';
+
   return (
-    <div className="max-w-4xl mx-auto">
+    <div className="page-narrow">
       {/* Header */}
-      <div className="mb-6">
-        <div className="flex justify-between items-center">
-          <h1 className="text-2xl font-bold text-gray-900">
-            {noteId ? 'Editar Nota' : 'Nueva Nota'}
-          </h1>
-          <div className="flex gap-3">
-            {onCancel && (
-              <button
-                onClick={onCancel}
-                className="btn btn-outline"
-                disabled={loading}
-              >
-                Cancelar
-              </button>
-            )}
+      <div className="page-head">
+        <h1 className="page-title page-title-sm">
+          {noteId ? 'Editar nota' : 'Nueva nota'}
+        </h1>
+        <div className="page-actions hide-mobile">
+          {onCancel && (
             <button
-              onClick={handleSave}
-              className="btn btn-primary"
-              disabled={loading || !formData.title.trim()}
+              onClick={onCancel}
+              className="btn btn-ghost btn-sm"
+              disabled={loading}
             >
-              {loading ? (
-                <span className="flex items-center gap-2">
-                  <div className="spinner"></div>
-                  Guardando...
-                </span>
-              ) : (
-                noteId ? 'Actualizar' : 'Crear Nota'
-              )}
+              Cancelar
             </button>
-          </div>
+          )}
+          <button
+            onClick={handleSave}
+            className="btn btn-secondary btn-sm"
+            disabled={!canSave}
+          >
+            {loading ? 'Guardando...' : 'Guardar'}
+          </button>
         </div>
-        
-        {saved && (
-          <div className="mt-2 text-green-600 text-sm">
-            ✅ Nota guardada automáticamente
-          </div>
-        )}
       </div>
+
+      {saved && (
+        <div className="status-ok">
+          <Icon name="check" size={16} />
+          Nota guardada automáticamente
+        </div>
+      )}
 
       {/* Error message */}
       {error && (
-        <div className="alert alert-error mb-6">
+        <div className="alert alert-error">
+          <Icon name="alert" />
           {error}
         </div>
       )}
 
       {/* Form */}
-      <div className="space-y-6">
+      <div>
         {/* Title */}
         <div className="form-group">
-          <label htmlFor="title" className="form-label text-lg">
+          <label htmlFor="title" className="form-label">
             Título *
           </label>
           <input
@@ -230,11 +228,11 @@ const NoteEditor = ({ noteId, onSave, onCancel }) => {
             value={formData.title}
             onChange={(e) => handleInputChange('title', e.target.value)}
             placeholder="Escribe el título de tu nota..."
-            className="form-input text-lg"
+            className="form-input form-input-title"
             disabled={loading}
             maxLength={500}
           />
-          <div className="text-sm text-gray-500 mt-1">
+          <div className="form-help">
             {formData.title.length}/500 caracteres
           </div>
         </div>
@@ -254,7 +252,7 @@ const NoteEditor = ({ noteId, onSave, onCancel }) => {
             disabled={loading}
             maxLength={2000}
           />
-          <div className="text-sm text-gray-500 mt-1">
+          <div className="form-help">
             {formData.summary.length}/2000 caracteres
           </div>
         </div>
@@ -262,9 +260,9 @@ const NoteEditor = ({ noteId, onSave, onCancel }) => {
         {/* Content Editor */}
         <div className="form-group">
           <label className="form-label">
-            Contenido Principal
+            Contenido principal
           </label>
-          <div className="border border-gray-300 rounded-lg overflow-hidden">
+          <div className="editor-shell">
             <ReactQuill
               ref={quillRef}
               value={formData.content}
@@ -272,110 +270,42 @@ const NoteEditor = ({ noteId, onSave, onCancel }) => {
               modules={quillModules}
               formats={quillFormats}
               placeholder="Desarrolla tu idea principal aquí..."
-              style={{ minHeight: '300px' }}
               readOnly={loading}
             />
           </div>
-          <div className="text-sm text-gray-500 mt-1">
-            💡 Puedes pegar texto en Markdown y se convertirá automáticamente en texto con formato (Ctrl+Z para deshacer).
+          <div className="form-help">
+            Puedes pegar texto en Markdown y se convertirá automáticamente en texto con formato (Ctrl+Z para deshacer).
           </div>
         </div>
 
         {/* Action buttons right after content - no need to scroll */}
-        <div style={{
-          backgroundColor: '#f9fafb',
-          border: '1px solid #e5e7eb',
-          borderRadius: '8px',
-          padding: '24px',
-          marginTop: '24px',
-          marginBottom: '24px'
-        }}>
-          <div className="flex gap-3 justify-end">
-            {onCancel && (
-              <button
-                onClick={onCancel}
-                disabled={loading}
-                style={{
-                  backgroundColor: '#6b7280',
-                  color: 'white',
-                  padding: '12px 24px',
-                  borderRadius: '8px',
-                  border: 'none',
-                  fontSize: '16px',
-                  fontWeight: '600',
-                  cursor: loading ? 'not-allowed' : 'pointer',
-                  opacity: loading ? 0.6 : 1,
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                  boxShadow: '0 2px 8px rgba(107, 114, 128, 0.3)',
-                  transition: 'all 0.3s ease'
-                }}
-                onMouseOver={(e) => {
-                  if (!loading) {
-                    e.currentTarget.style.backgroundColor = '#4b5563';
-                    e.currentTarget.style.transform = 'translateY(-2px)';
-                    e.currentTarget.style.boxShadow = '0 4px 12px rgba(107, 114, 128, 0.4)';
-                  }
-                }}
-                onMouseOut={(e) => {
-                  if (!loading) {
-                    e.currentTarget.style.backgroundColor = '#6b7280';
-                    e.currentTarget.style.transform = 'translateY(0)';
-                    e.currentTarget.style.boxShadow = '0 2px 8px rgba(107, 114, 128, 0.3)';
-                  }
-                }}
-              >
-                ✕ Cancelar
-              </button>
-            )}
+        <div className="action-bar">
+          {onCancel && (
             <button
-              onClick={handleSave}
-              disabled={loading || !formData.title.trim()}
-              style={{
-                backgroundColor: loading || !formData.title.trim() ? '#9ca3af' : '#10b981',
-                color: 'white',
-                padding: '12px 32px',
-                borderRadius: '8px',
-                border: 'none',
-                fontSize: '16px',
-                fontWeight: '600',
-                cursor: loading || !formData.title.trim() ? 'not-allowed' : 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px',
-                boxShadow: loading || !formData.title.trim() ? 'none' : '0 2px 8px rgba(16, 185, 129, 0.3)',
-                transition: 'all 0.3s ease',
-                minWidth: '200px',
-                justifyContent: 'center'
-              }}
-              onMouseOver={(e) => {
-                if (!loading && formData.title.trim()) {
-                  e.currentTarget.style.backgroundColor = '#059669';
-                  e.currentTarget.style.transform = 'translateY(-2px)';
-                  e.currentTarget.style.boxShadow = '0 4px 12px rgba(16, 185, 129, 0.4)';
-                }
-              }}
-              onMouseOut={(e) => {
-                if (!loading && formData.title.trim()) {
-                  e.currentTarget.style.backgroundColor = '#10b981';
-                  e.currentTarget.style.transform = 'translateY(0)';
-                  e.currentTarget.style.boxShadow = '0 2px 8px rgba(16, 185, 129, 0.3)';
-                }
-              }}
+              onClick={onCancel}
+              className="btn btn-ghost"
+              disabled={loading}
             >
-              {loading ? (
-                <>
-                  <div className="spinner" style={{ width: '16px', height: '16px' }}></div>
-                  Guardando...
-                </>
-              ) : (
-                <>
-                  💾 {noteId ? 'Actualizar Nota' : 'Crear Nota'}
-                </>
-              )}
+              Cancelar
             </button>
-          </div>
+          )}
+          <button
+            onClick={handleSave}
+            className="btn btn-primary"
+            disabled={!canSave}
+          >
+            {loading ? (
+              <>
+                <span className="spinner"></span>
+                Guardando...
+              </>
+            ) : (
+              <>
+                <Icon name="check" />
+                {saveLabel}
+              </>
+            )}
+          </button>
         </div>
 
         {/* Tags */}
@@ -391,24 +321,24 @@ const NoteEditor = ({ noteId, onSave, onCancel }) => {
         </div>
 
         {/* Privacy Setting */}
-        <div className="form-group">
-          <div className="flex items-center space-x-3">
-            <input
-              type="checkbox"
-              id="isPrivate"
-              checked={formData.isPrivate}
-              onChange={(e) => handleInputChange('isPrivate', e.target.checked)}
-              className="form-checkbox h-5 w-5 text-red-600 rounded border-gray-300 focus:ring-red-500"
-              disabled={loading}
-            />
-            <label htmlFor="isPrivate" className="form-label mb-0 cursor-pointer">
-              <span className="font-medium text-red-700">🔒 Nota Privada</span>
-              <div className="text-sm text-gray-600 mt-1">
-                Solo yo puedo ver, editar y eliminar esta nota. Perfecta para información sensible como contraseñas, cuentas personales, etc.
-              </div>
-            </label>
-          </div>
-        </div>
+        <label className="check-row" htmlFor="isPrivate">
+          <input
+            type="checkbox"
+            id="isPrivate"
+            checked={formData.isPrivate}
+            onChange={(e) => handleInputChange('isPrivate', e.target.checked)}
+            disabled={loading}
+          />
+          <span>
+            <span className="check-row-title">
+              <Icon name="lock" size={16} />
+              Nota privada
+            </span>
+            <span className="check-row-text">
+              Solo yo puedo ver, editar y eliminar esta nota. Perfecta para información sensible como contraseñas, cuentas personales, etc.
+            </span>
+          </span>
+        </label>
 
         {/* Attachments */}
         {noteId && (
@@ -417,17 +347,6 @@ const NoteEditor = ({ noteId, onSave, onCancel }) => {
             isEditing={true}
           />
         )}
-      </div>
-
-      {/* Mobile save button - hidden on desktop */}
-      <div className="mt-8 mb-24 block md:hidden" style={{ marginBottom: '6rem' }}>
-        <button
-          onClick={handleSave}
-          className="btn btn-primary w-full"
-          disabled={loading || !formData.title.trim()}
-        >
-          {loading ? 'Guardando...' : (noteId ? 'Actualizar Nota' : 'Crear Nota')}
-        </button>
       </div>
     </div>
   );

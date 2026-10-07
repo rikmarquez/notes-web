@@ -7,11 +7,9 @@ const ProtectedRoute = ({ children }) => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-center">
-          <div className="spinner mb-4"></div>
-          <p className="text-gray-600">Verificando autenticación...</p>
-        </div>
+      <div className="screen-center">
+        <div className="spinner"></div>
+        <p>Verificando autenticación...</p>
       </div>
     );
   }

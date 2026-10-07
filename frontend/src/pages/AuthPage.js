@@ -1,63 +1,54 @@
 import React, { useState } from 'react';
 import LoginForm from '../components/Auth/LoginForm';
 import RegisterForm from '../components/Auth/RegisterForm';
+import Logo from '../components/UI/Logo';
+import Icon from '../components/UI/Icon';
 
 const AuthPage = () => {
   const [isLogin, setIsLogin] = useState(true);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <div className="flex items-center justify-center mb-4">
-            <img 
-              src="/assets/notes-logo.png" 
-              alt="Notes Web Logo" 
-              style={{
-                width: '48px',
-                height: '48px',
-                objectFit: 'contain'
-              }}
-              className="mr-3"
-            />
-            <h1 className="text-4xl font-bold text-gray-900">
-              Notes Web
-            </h1>
-          </div>
-          <p className="text-lg text-gray-600">
-            Tu sistema personal de gestión de conocimiento
-          </p>
+    <div className="auth">
+      {/* Brand panel - desktop only */}
+      <aside className="auth-brand">
+        <Logo size={34} inverse />
+
+        <div>
+          <h1 className="auth-headline">
+            Tus ideas, organizadas y conectadas.
+          </h1>
+          <ul className="auth-points">
+            <li>
+              <Icon name="search" size={20} />
+              Búsqueda inteligente
+            </li>
+            <li>
+              <Icon name="tag" size={20} />
+              Sistema de tags
+            </li>
+            <li>
+              <Icon name="link" size={20} />
+              Conexiones entre ideas
+            </li>
+          </ul>
         </div>
 
-        {/* Auth Forms */}
-        {isLogin ? (
-          <LoginForm onSwitchToRegister={() => setIsLogin(false)} />
-        ) : (
-          <RegisterForm onSwitchToLogin={() => setIsLogin(true)} />
-        )}
+        <p className="auth-foot">
+          Tu sistema personal de gestión de conocimiento
+        </p>
+      </aside>
 
-        {/* Features */}
-        <div className="mt-12 mb-16 text-center">
-          <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-4">
-            Características principales
-          </h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-gray-600">
-            <div className="flex flex-col items-center">
-              <span className="text-2xl mb-2">🔍</span>
-              <span>Búsqueda inteligente</span>
-            </div>
-            <div className="flex flex-col items-center">
-              <span className="text-2xl mb-2">🏷️</span>
-              <span>Sistema de tags</span>
-            </div>
-            <div className="flex flex-col items-center">
-              <span className="text-2xl mb-2">🔗</span>
-              <span>Conexiones entre ideas</span>
-            </div>
-          </div>
+      <main className="auth-main">
+        <div className="auth-form">
+          <Logo size={32} className="auth-logo-mobile" />
+
+          {isLogin ? (
+            <LoginForm onSwitchToRegister={() => setIsLogin(false)} />
+          ) : (
+            <RegisterForm onSwitchToLogin={() => setIsLogin(true)} />
+          )}
         </div>
-      </div>
+      </main>
     </div>
   );
 };

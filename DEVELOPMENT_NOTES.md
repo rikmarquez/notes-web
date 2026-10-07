@@ -202,8 +202,8 @@ CORS_ORIGINS=http://localhost:3000,https://your-production-url.com
 **Solution:** Custom `.prose` rules at the end of `frontend/src/index.css`
 
 ### Tailwind Classes Not Applying
-**Problem:** Framework specificity issues
-**Solution:** Use inline CSS for critical UI elements (buttons, navigation)
+**Problem:** Tailwind was never installed, so utility classes like `grid`, `md:grid-cols-2` or `fixed inset-0` were silently ignored
+**Solution:** Don't use Tailwind classes. Use the semantic classes and tokens in `frontend/src/index.css` (see CSS Strategy)
 
 ---
 
@@ -246,9 +246,14 @@ WHERE (n.is_private = false OR n.is_private IS NULL OR n.user_id = $currentUserI
 ```
 
 ### CSS Strategy
-- **Tailwind:** General layout and utilities
-- **Inline CSS:** Critical interactive elements (guaranteed application)
-- **Use `e.currentTarget`** in hover handlers to avoid nested element issues
+- **Single stylesheet:** `frontend/src/index.css` holds the design tokens (`:root` variables) and every component class. No Tailwind, no inline styles, no per-component CSS files
+- **Brand palette:** Charcoal `#1F2937` (ink), Slate Blue `#647CA3` (the only accent), Warm Gray `#D9D6CE` (lines), Light `#F4F5F7` (background)
+- **Accent contrast:** text and buttons use `--accent` (`#556C93`, the brand blue darkened to pass WCAG AA with white text); `--accent-brand` is for focus rings and decoration only
+- **One primary button per screen** (`.btn-primary`); everything else is `.btn-secondary`, `.btn-ghost` or `.btn-danger`
+- **Typography:** Manrope (Google Fonts, loaded in `public/index.html`), weights 400–800
+- **Icons:** inline SVGs via `components/UI/Icon.js` (`<Icon name="search" />`). No emoji as UI icons
+- **Logo:** `components/UI/Logo.js` (isotipo + wordmark); favicon and install icons live in `public/assets/`
+- **Breakpoints:** `1023px` (tags sidebar and auth brand panel collapse) and `719px` (mobile)
 
 ### Pagination Pattern
 ```javascript
@@ -306,6 +311,7 @@ isValidFileType: (file) => file.name && file.name.trim().length > 0
 
 | Date | Feature | Key Changes |
 |------|---------|-------------|
+| 2026-10-06 | Visual Redesign | Brand design system in `index.css`, Manrope font, SVG icons and logo, PWA install icons, removed emoji/inline styles |
 | 2026-10-01 | Markdown Paste | Auto-convert pasted markdown to rich text, blockquote/code-block in toolbar, `.prose` view styles |
 | 2025-01-11 | Edit Button Below Content | Added footer edit button to eliminate scrolling |
 | 2025-08-15 | Floating Dashboard Button | Fixed position 🏠 button for quick navigation |

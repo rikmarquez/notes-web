@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import notesService from '../../services/notesService';
+import Icon from '../UI/Icon';
 import { getTextPreview, highlightSearchTerm, getErrorMessage } from '../../utils/helpers';
 
 const SearchResults = ({ searchQuery, onNoteClick, onClose }) => {
@@ -73,11 +74,9 @@ const SearchResults = ({ searchQuery, onNoteClick, onClose }) => {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-64">
-        <div className="flex items-center gap-2">
-          <div className="spinner"></div>
-          <span>Buscando...</span>
-        </div>
+      <div className="loading-row">
+        <div className="spinner"></div>
+        Buscando...
       </div>
     );
   }
@@ -85,22 +84,20 @@ const SearchResults = ({ searchQuery, onNoteClick, onClose }) => {
   if (error) {
     return (
       <div className="alert alert-error">
-        <div className="flex items-center gap-2">
-          <span>❌</span>
-          <span>{error}</span>
-        </div>
+        <Icon name="alert" />
+        {error}
       </div>
     );
   }
 
   if (results.length === 0) {
     return (
-      <div className="text-center py-12">
-        <div className="text-6xl mb-4">🔍</div>
-        <h3 className="text-xl font-semibold text-gray-700 mb-2">
-          No se encontraron resultados
-        </h3>
-        <p className="text-gray-500 mb-6">
+      <div className="empty">
+        <div className="empty-icon">
+          <Icon name="search" size={24} />
+        </div>
+        <h3>No se encontraron resultados</h3>
+        <p>
           No se encontraron notas para "{searchQuery}". Intenta con otros términos de búsqueda.
         </p>
       </div>
@@ -110,94 +107,89 @@ const SearchResults = ({ searchQuery, onNoteClick, onClose }) => {
   return (
     <div>
       {/* Results header */}
-      <div className="mb-6">
-        <h2 className="text-xl font-semibold text-gray-900">
-          Resultados de búsqueda para "{searchQuery}"
-        </h2>
-        <p className="text-gray-600">
+      <div className="list-head">
+        <p className="eyebrow">
           {results.length} {results.length === 1 ? 'nota encontrada' : 'notas encontradas'}
         </p>
       </div>
 
       {/* Results grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="notes-grid">
         {results.map((note) => (
-          <div
+          <article
             key={note.id}
-            className="search-result-note bg-white rounded-lg shadow-sm border border-gray-200 p-4 cursor-pointer hover:shadow-md transition-shadow group"
+            className="search-result-note note-card"
             onClick={() => handleResultClick(note)}
+            onKeyDown={(e) => e.key === 'Enter' && handleResultClick(note)}
+            role="link"
+            tabIndex={0}
           >
-            <div className="flex flex-col h-full">
-              {/* Title with privacy indicator */}
-              <div className="flex items-start justify-between gap-2 mb-2">
-                <h4 
-                  className="font-semibold text-gray-900 line-clamp-2 flex-1"
-                  dangerouslySetInnerHTML={{
-                    __html: highlightSearchTerm(note.title, searchQuery)
-                  }}
-                />
-                {note.is_private && (
-                  <div className="flex-shrink-0 bg-red-100 text-red-800 text-xs px-1.5 py-0.5 rounded-full flex items-center gap-1">
-                    🔒 <span>Privado</span>
-                  </div>
-                )}
-              </div>
-              
-              {/* Content preview */}
-              <p 
-                className="text-gray-600 text-sm mb-3 flex-grow line-clamp-3"
+            {/* Title with privacy indicator */}
+            <div className="note-card-head">
+              <h3
+                className="note-card-title"
                 dangerouslySetInnerHTML={{
-                  __html: highlightSearchTerm(
-                    getTextPreview(note.summary || note.content, 120), 
-                    searchQuery
-                  )
+                  __html: highlightSearchTerm(note.title, searchQuery)
                 }}
               />
-              
-              {/* Tags */}
-              {note.tags && note.tags.length > 0 && (
-                <div className="flex flex-wrap gap-1 mt-auto">
-                  {note.tags.slice(0, 3).map((tag, index) => (
-                    <span 
-                      key={index} 
-                      className={`inline-block px-2 py-1 text-xs rounded-full ${
-                        tag.toLowerCase().includes(searchQuery.toLowerCase()) 
-                          ? 'bg-yellow-200 text-yellow-800' 
-                          : 'bg-gray-100 text-gray-600'
-                      }`}
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                  {note.tags.length > 3 && (
-                    <span className="text-xs text-gray-500 px-2 py-1">
-                      +{note.tags.length - 3}
-                    </span>
-                  )}
-                </div>
-              )}
-              
-              {/* Date */}
-              {note.updated_at && (
-                <div className="text-xs text-gray-400 mt-2">
-                  {new Date(note.updated_at).toLocaleDateString('es-ES', {
-                    year: 'numeric',
-                    month: 'short',
-                    day: 'numeric'
-                  })}
-                </div>
+              {note.is_private && (
+                <span className="chip-lock">
+                  <Icon name="lock" size={12} />
+                  Privada
+                </span>
               )}
             </div>
-          </div>
+
+            {/* Content preview */}
+            <p
+              className="note-card-text"
+              dangerouslySetInnerHTML={{
+                __html: highlightSearchTerm(
+                  getTextPreview(note.summary || note.content, 120),
+                  searchQuery
+                )
+              }}
+            />
+
+            {/* Tags */}
+            {note.tags && note.tags.length > 0 && (
+              <div className="tag-row">
+                {note.tags.slice(0, 3).map((tag, index) => (
+                  <span
+                    key={index}
+                    className={`tag ${
+                      tag.toLowerCase().includes(searchQuery.toLowerCase())
+                        ? 'tag-match'
+                        : ''
+                    }`}
+                  >
+                    {tag}
+                  </span>
+                ))}
+                {note.tags.length > 3 && (
+                  <span className="tag">+{note.tags.length - 3}</span>
+                )}
+              </div>
+            )}
+
+            {/* Date */}
+            {note.updated_at && (
+              <div className="note-card-foot">
+                {new Date(note.updated_at).toLocaleDateString('es-ES', {
+                  year: 'numeric',
+                  month: 'short',
+                  day: 'numeric'
+                })}
+              </div>
+            )}
+          </article>
         ))}
       </div>
-      
+
       {results.length >= 20 && (
-        <div className="text-center mt-8 p-4 bg-gray-50 rounded-lg">
-          <p className="text-gray-600 text-sm">
-            Se muestran los primeros 20 resultados. Refina tu búsqueda para resultados más específicos.
-          </p>
-        </div>
+        <p className="form-help">
+          Se muestran los primeros 20 resultados. Refina tu búsqueda para resultados más específicos.
+        </p>
       )}
     </div>
   );

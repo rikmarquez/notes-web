@@ -6,6 +6,7 @@ import AuthPage from './pages/AuthPage';
 import DashboardPage from './pages/DashboardPage';
 import NoteViewPage from './pages/NoteViewPage';
 import NoteEditPage from './pages/NoteEditPage';
+import Logo from './components/UI/Logo';
 import './index.css';
 
 function App() {
@@ -15,12 +16,9 @@ function App() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-center">
-          <div className="text-4xl mb-4">📝</div>
-          <div className="spinner mb-4"></div>
-          <p className="text-gray-600">Cargando Notes Web...</p>
-        </div>
+      <div className="screen-center">
+        <Logo size={40} />
+        <div className="spinner"></div>
       </div>
     );
   }
@@ -88,22 +86,22 @@ function App() {
           <Route 
             path="*" 
             element={
-              <div className="min-h-screen flex items-center justify-center bg-gray-50">
-                <div className="text-center">
-                  <div className="text-6xl mb-4">📝</div>
-                  <h1 className="text-2xl font-bold text-gray-900 mb-2">
+              <div className="screen-center">
+                <Logo size={40} wordmark={false} />
+                <div>
+                  <h1 className="page-title page-title-sm">
                     Página no encontrada
                   </h1>
-                  <p className="text-gray-600 mb-6">
+                  <p className="muted">
                     La página que buscas no existe o ha sido movida.
                   </p>
-                  <a 
-                    href={isAuthenticated ? "/dashboard" : "/auth"}
-                    className="btn btn-primary"
-                  >
-                    {isAuthenticated ? "Ir al Dashboard" : "Ir al Login"}
-                  </a>
                 </div>
+                <a
+                  href={isAuthenticated ? "/dashboard" : "/auth"}
+                  className="btn btn-primary"
+                >
+                  {isAuthenticated ? "Ir al Dashboard" : "Ir al Login"}
+                </a>
               </div>
             } 
           />

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../hooks/useAuth';
 import { validateEmail, validatePassword, getErrorMessage } from '../../utils/helpers';
+import Icon from '../UI/Icon';
 
 const LoginForm = ({ onSwitchToRegister }) => {
   const { login, loading } = useAuth();
@@ -60,89 +61,86 @@ const LoginForm = ({ onSwitchToRegister }) => {
   };
 
   return (
-    <div className="card w-full max-w-md mx-auto">
-      <div className="card-header">
-        <h2 className="text-2xl font-bold text-center">Iniciar Sesión</h2>
-        <p className="text-gray-600 text-center mt-2">
-          Accede a tu sistema de gestión de conocimiento
-        </p>
-      </div>
+    <div>
+      <h2 className="auth-title">Iniciar sesión</h2>
+      <p className="auth-sub">
+        Accede a tu sistema de gestión de conocimiento
+      </p>
 
-      <div className="card-body">
-        {apiError && (
-          <div className="alert alert-error">
-            {apiError}
-          </div>
-        )}
+      {apiError && (
+        <div className="alert alert-error">
+          <Icon name="alert" />
+          {apiError}
+        </div>
+      )}
 
-        <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label htmlFor="email" className="form-label">
-              Email
-            </label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              className={`form-input ${errors.email ? 'border-red-500' : ''}`}
-              placeholder="tu@email.com"
-              disabled={loading}
-            />
-            {errors.email && (
-              <p className="text-red-500 text-sm mt-1">{errors.email}</p>
-            )}
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="password" className="form-label">
-              Contraseña
-            </label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              className={`form-input ${errors.password ? 'border-red-500' : ''}`}
-              placeholder="Tu contraseña"
-              disabled={loading}
-            />
-            {errors.password && (
-              <p className="text-red-500 text-sm mt-1">{errors.password}</p>
-            )}
-          </div>
-
-          <button
-            type="submit"
+      <form onSubmit={handleSubmit} noValidate>
+        <div className="form-group">
+          <label htmlFor="email" className="form-label">
+            Email
+          </label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            className={`form-input ${errors.email ? 'is-invalid' : ''}`}
+            placeholder="tu@email.com"
+            autoComplete="email"
             disabled={loading}
-            className="btn btn-primary w-full"
-          >
-            {loading ? (
-              <span className="flex items-center justify-center gap-2">
-                <div className="spinner"></div>
-                Iniciando sesión...
-              </span>
-            ) : (
-              'Iniciar Sesión'
-            )}
-          </button>
-        </form>
-      </div>
+          />
+          {errors.email && (
+            <p className="form-error">{errors.email}</p>
+          )}
+        </div>
 
-      <div className="card-footer">
-        <p className="text-center text-gray-600">
-          ¿No tienes cuenta?{' '}
-          <button
-            onClick={onSwitchToRegister}
-            className="text-blue-600 hover:text-blue-700 font-medium"
+        <div className="form-group">
+          <label htmlFor="password" className="form-label">
+            Contraseña
+          </label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
+            className={`form-input ${errors.password ? 'is-invalid' : ''}`}
+            placeholder="Tu contraseña"
+            autoComplete="current-password"
             disabled={loading}
-          >
-            Regístrate aquí
-          </button>
-        </p>
-      </div>
+          />
+          {errors.password && (
+            <p className="form-error">{errors.password}</p>
+          )}
+        </div>
+
+        <button
+          type="submit"
+          disabled={loading}
+          className="btn btn-primary btn-lg btn-block"
+        >
+          {loading ? (
+            <>
+              <span className="spinner"></span>
+              Iniciando sesión...
+            </>
+          ) : (
+            'Iniciar sesión'
+          )}
+        </button>
+      </form>
+
+      <p className="auth-switch">
+        ¿No tienes cuenta?{' '}
+        <button
+          onClick={onSwitchToRegister}
+          className="link-btn"
+          disabled={loading}
+        >
+          Regístrate aquí
+        </button>
+      </p>
     </div>
   );
 };

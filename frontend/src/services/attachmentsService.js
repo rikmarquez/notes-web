@@ -75,17 +75,17 @@ const attachmentsService = {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
   },
 
-  // Obtener icono según tipo de archivo
+  // Obtener nombre de icono (components/UI/Icon) según tipo de archivo
   getFileIcon: (mimeType) => {
-    if (mimeType.includes('pdf')) return '📄';
-    if (mimeType.includes('word')) return '📝';
-    if (mimeType.includes('excel') || mimeType.includes('sheet')) return '📊';
-    if (mimeType.includes('image')) return '🖼️';
-    if (mimeType.includes('text')) return '📄';
-    if (mimeType.includes('sql') || mimeType === 'application/sql') return '🗃️';
-    if (mimeType.includes('tar') || mimeType.includes('archive')) return '🗜️';
-    if (mimeType.includes('zip') || mimeType.includes('compressed')) return '🗜️';
-    return '📎';
+    if (mimeType.includes('pdf')) return 'file';
+    if (mimeType.includes('word')) return 'file';
+    if (mimeType.includes('excel') || mimeType.includes('sheet')) return 'table';
+    if (mimeType.includes('image')) return 'image';
+    if (mimeType.includes('text')) return 'file';
+    if (mimeType.includes('sql') || mimeType === 'application/sql') return 'database';
+    if (mimeType.includes('tar') || mimeType.includes('archive')) return 'archive';
+    if (mimeType.includes('zip') || mimeType.includes('compressed')) return 'archive';
+    return 'paperclip';
   },
 
   // Validar tipo de archivo - ahora permite todos los tipos

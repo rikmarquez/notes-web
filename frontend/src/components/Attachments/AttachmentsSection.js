@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import attachmentsService from '../../services/attachmentsService';
-import './AttachmentsSection.css';
+import Icon from '../UI/Icon';
 
 const AttachmentsSection = ({ noteId, isEditing }) => {
   const [attachments, setAttachments] = useState([]);
@@ -29,14 +29,14 @@ const AttachmentsSection = ({ noteId, isEditing }) => {
 
   const handleFileUpload = async (files) => {
     const fileArray = Array.from(files);
-    
+
     for (const file of fileArray) {
       // Validaciones
       if (!attachmentsService.isValidFileType(file)) {
         alert(`Archivo inválido: ${file.name}`);
         continue;
       }
-      
+
       if (!attachmentsService.isValidFileSize(file)) {
         alert(`Archivo demasiado grande: ${file.name}. Máximo 10MB`);
         continue;
@@ -67,7 +67,7 @@ const AttachmentsSection = ({ noteId, isEditing }) => {
   const handleDrop = (event) => {
     event.preventDefault();
     setDragOver(false);
-    
+
     const files = event.dataTransfer.files;
     if (files && files.length > 0) {
       handleFileUpload(files);
@@ -109,24 +109,39 @@ const AttachmentsSection = ({ noteId, isEditing }) => {
 
   if (loading) {
     return (
-      <div className="attachments-section">
-        <h3>📎 Archivos adjuntos</h3>
-        <div className="loading">Cargando archivos...</div>
-      </div>
+      <section className="section attachments-section">
+        <div className="section-head">
+          <h2 className="section-title">Archivos adjuntos</h2>
+        </div>
+        <p className="form-help">Cargando archivos...</p>
+      </section>
     );
   }
 
   return (
-    <div className="attachments-section">
-      <div className="attachments-header">
-        <h3>📎 Archivos adjuntos ({attachments.length})</h3>
+    <section className="section attachments-section">
+      <div className="section-head">
+        <h2 className="section-title">
+          Archivos adjuntos
+          <span className="count">{attachments.length}</span>
+        </h2>
         {isEditing && (
           <button
-            className="upload-button"
+            className="btn btn-secondary btn-sm"
             onClick={() => fileInputRef.current?.click()}
             disabled={uploading}
           >
-            {uploading ? 'Subiendo...' : '+ Agregar archivo'}
+            {uploading ? (
+              <>
+                <span className="spinner"></span>
+                Subiendo...
+              </>
+            ) : (
+              <>
+                <Icon name="plus" size={16} />
+                Agregar archivo
+              </>
+            )}
           </button>
         )}
       </div>
@@ -141,55 +156,53 @@ const AttachmentsSection = ({ noteId, isEditing }) => {
             style={{ display: 'none' }}
             accept="*"
           />
-          
+
           <div
-            className={`drop-zone ${dragOver ? 'drag-over' : ''}`}
+            className={`drop-zone is-clickable ${dragOver ? 'is-active' : ''}`}
             onDrop={handleDrop}
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
             onClick={() => fileInputRef.current?.click()}
           >
-            <div className="drop-zone-content">
-              <div className="drop-zone-icon">📁</div>
-              <p>Arrastra archivos aquí o haz clic para seleccionar</p>
-              <small>Todos los tipos de archivo (máx. 10MB cada archivo)</small>
-            </div>
+            <Icon name="upload" size={24} />
+            <p>Arrastra archivos aquí o haz clic para seleccionar</p>
+            <span>Todos los tipos de archivo (máx. 10MB cada archivo)</span>
           </div>
         </>
       )}
 
-      <div className="attachments-list">
+      <div className="row-list">
         {attachments.map((attachment) => (
-          <div key={attachment.id} className="attachment-item">
-            <div className="attachment-info">
-              <span className="attachment-icon">
-                {attachmentsService.getFileIcon(attachment.mime_type)}
+          <div key={attachment.id} className="row">
+            <div className="row-main">
+              <span className="row-icon">
+                <Icon name={attachmentsService.getFileIcon(attachment.mime_type)} size={20} />
               </span>
-              <div className="attachment-details">
-                <div className="attachment-name">{attachment.original_filename}</div>
-                <div className="attachment-meta">
-                  {attachmentsService.formatFileSize(attachment.file_size)} • 
+              <div className="row-text">
+                <div className="row-title">{attachment.original_filename}</div>
+                <div className="row-sub">
+                  {attachmentsService.formatFileSize(attachment.file_size)} ·
                   {' '}{new Date(attachment.created_at).toLocaleDateString()}
-                  {attachment.uploader_name && ` • ${attachment.uploader_name}`}
+                  {attachment.uploader_name && ` · ${attachment.uploader_name}`}
                 </div>
               </div>
             </div>
-            
-            <div className="attachment-actions">
+
+            <div className="row-actions">
               <button
-                className="action-button download"
+                className="icon-btn"
                 onClick={() => handleDownload(attachment)}
                 title="Descargar"
               >
-                ⬇️
+                <Icon name="download" />
               </button>
               {isEditing && (
                 <button
-                  className="action-button delete"
+                  className="icon-btn icon-btn-danger"
                   onClick={() => handleDelete(attachment)}
                   title="Eliminar"
                 >
-                  🗑️
+                  <Icon name="trash" />
                 </button>
               )}
             </div>
@@ -198,11 +211,11 @@ const AttachmentsSection = ({ noteId, isEditing }) => {
       </div>
 
       {attachments.length === 0 && !isEditing && (
-        <div className="no-attachments">
+        <p className="form-help">
           No hay archivos adjuntos en esta nota.
-        </div>
+        </p>
       )}
-    </div>
+    </section>
   );
 };
 

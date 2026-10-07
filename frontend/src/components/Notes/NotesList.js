@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import NoteCard from './NoteCard';
+import Icon from '../UI/Icon';
 import notesService from '../../services/notesService';
 import { getErrorMessage } from '../../utils/helpers';
 
-const NotesList = ({ searchQuery, selectedTag, onNoteClick, refreshTrigger }) => {
+const NotesList = ({ searchQuery, selectedTag, onNoteClick, onClearTag, refreshTrigger }) => {
   const [notes, setNotes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -57,8 +58,9 @@ const NotesList = ({ searchQuery, selectedTag, onNoteClick, refreshTrigger }) =>
 
   if (loading && notes.length === 0) {
     return (
-      <div className="flex justify-center items-center h-64">
+      <div className="loading-row">
         <div className="spinner"></div>
+        Cargando notas...
       </div>
     );
   }
@@ -66,10 +68,11 @@ const NotesList = ({ searchQuery, selectedTag, onNoteClick, refreshTrigger }) =>
   if (error) {
     return (
       <div className="alert alert-error">
+        <Icon name="alert" />
         {error}
-        <button 
+        <button
           onClick={() => fetchNotes()}
-          className="btn btn-sm btn-outline ml-4"
+          className="btn btn-sm btn-outline"
         >
           Reintentar
         </button>
@@ -79,18 +82,25 @@ const NotesList = ({ searchQuery, selectedTag, onNoteClick, refreshTrigger }) =>
 
   if (notes.length === 0) {
     return (
-      <div className="text-center py-12">
-        <div className="text-6xl mb-4">📝</div>
-        <h3 className="text-xl font-semibold text-gray-700 mb-2">
-          {searchQuery ? 'No se encontraron notas' : 
-           selectedTag ? `No hay notas con el tag "${selectedTag}"` : 
+      <div className="empty">
+        <div className="empty-icon">
+          <Icon name="note" size={24} />
+        </div>
+        <h3>
+          {searchQuery ? 'No se encontraron notas' :
+           selectedTag ? `No hay notas con el tag "${selectedTag}"` :
            'No tienes notas aún'}
         </h3>
-        <p className="text-gray-500 mb-6">
+        <p>
           {searchQuery ? 'Intenta con otros términos de búsqueda' :
            selectedTag ? 'Prueba con otro tag o crea una nueva nota' :
            'Comienza creando tu primera nota para organizar tus ideas'}
         </p>
+        {selectedTag && onClearTag && (
+          <button onClick={onClearTag} className="btn btn-sm btn-outline">
+            Quitar filtro
+          </button>
+        )}
       </div>
     );
   }
@@ -98,94 +108,46 @@ const NotesList = ({ searchQuery, selectedTag, onNoteClick, refreshTrigger }) =>
   return (
     <div>
       {/* Results header */}
-      <div className="mb-6">
-        <h2 className="text-xl font-semibold text-gray-900">
-          {searchQuery ? `Resultados para "${searchQuery}"` :
-           selectedTag ? `Notas con tag "${selectedTag}"` :
-           'Tus notas recientes'}
-        </h2>
-        <p className="text-gray-600">
-          {notes.length} {notes.length === 1 ? 'nota encontrada' : 'notas encontradas'}
+      <div className="list-head">
+        <p className="eyebrow">
+          {selectedTag ? 'Filtradas por tag' : 'Recientes'}
+          {' · '}
+          {notes.length} {notes.length === 1 ? 'nota' : 'notas'}
         </p>
+        {selectedTag && onClearTag && (
+          <button onClick={onClearTag} className="btn btn-sm btn-ghost">
+            <Icon name="x" size={16} />
+            Quitar filtro
+          </button>
+        )}
       </div>
 
       {/* Notes grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="notes-grid">
         {notes.map((note) => (
-          <div key={note.id} className="group">
-            <NoteCard
-              note={note}
-              onClick={onNoteClick}
-            />
-          </div>
+          <NoteCard
+            key={note.id}
+            note={note}
+            onClick={onNoteClick}
+          />
         ))}
       </div>
 
       {/* Load more button */}
       {hasMore && (
-        <div 
-          className="text-center"
-          style={{
-            marginTop: '3rem',
-            marginBottom: '2rem',
-            paddingTop: '2rem',
-            paddingBottom: '2rem'
-          }}
-        >
+        <div className="load-more">
           <button
             onClick={handleLoadMore}
             disabled={loading}
-            style={{
-              backgroundColor: loading ? '#e5e7eb' : '#3b82f6',
-              color: 'white',
-              border: 'none',
-              borderRadius: '12px',
-              padding: '16px 32px',
-              fontSize: '16px',
-              fontWeight: '600',
-              cursor: loading ? 'not-allowed' : 'pointer',
-              boxShadow: '0 4px 12px rgba(59, 130, 246, 0.3)',
-              transition: 'all 0.3s ease',
-              minWidth: '200px',
-              display: 'inline-flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '8px'
-            }}
-            onMouseEnter={(e) => {
-              if (!loading) {
-                e.target.style.backgroundColor = '#2563eb';
-                e.target.style.transform = 'translateY(-2px)';
-                e.target.style.boxShadow = '0 6px 16px rgba(59, 130, 246, 0.4)';
-              }
-            }}
-            onMouseLeave={(e) => {
-              if (!loading) {
-                e.target.style.backgroundColor = '#3b82f6';
-                e.target.style.transform = 'translateY(0)';
-                e.target.style.boxShadow = '0 4px 12px rgba(59, 130, 246, 0.3)';
-              }
-            }}
+            className="btn btn-secondary"
           >
             {loading ? (
               <>
-                <div 
-                  className="spinner" 
-                  style={{ 
-                    width: '16px', 
-                    height: '16px',
-                    border: '2px solid #ffffff',
-                    borderTop: '2px solid transparent',
-                    borderRadius: '50%',
-                    animation: 'spin 1s linear infinite'
-                  }}
-                ></div>
+                <span className="spinner"></span>
                 Cargando notas...
               </>
             ) : (
-              <>
-                📚 CARGAR MAS NOTAS
-              </>
+              'Cargar más notas'
             )}
           </button>
         </div>

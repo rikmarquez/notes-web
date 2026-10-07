@@ -1,4 +1,5 @@
 import React from 'react';
+import Icon from '../UI/Icon';
 import { formatDate, getTextPreview } from '../../utils/helpers';
 
 const NoteCard = ({ note, onClick }) => {
@@ -6,52 +7,48 @@ const NoteCard = ({ note, onClick }) => {
     onClick(note);
   };
 
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      onClick(note);
+    }
+  };
+
   return (
-    <div 
-      className="card cursor-pointer hover:shadow-lg transition-shadow"
+    <article
+      className="note-card"
       onClick={handleClick}
+      onKeyDown={handleKeyDown}
+      role="link"
+      tabIndex={0}
     >
-      <div className="card-body">
-        {/* Header with title */}
-        <div className="mb-3">
-          <div className="flex items-start justify-between gap-2">
-            <h3 className="text-lg font-semibold text-gray-900 line-clamp-2 flex-1">
-              {note.title}
-            </h3>
-            {note.is_private && (
-              <div className="flex-shrink-0 bg-red-100 text-red-800 text-xs px-2 py-1 rounded-full flex items-center gap-1">
-                🔒 <span>Privado</span>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Summary */}
-        {note.summary && (
-          <div className="mb-3">
-            <p className="text-sm text-gray-600 italic">
-              {getTextPreview(note.summary, 200)}
-            </p>
-          </div>
-        )}
-
-        {/* Footer with author and date */}
-        <div className="flex justify-between items-center text-sm text-gray-500">
-          <div className="flex items-center gap-2">
-            <span className="font-medium text-gray-700">
-              👤 {note.author_name || 'Usuario'}
-            </span>
-            <span>•</span>
-            <span>
-              {formatDate(note.updated_at)}
-            </span>
-          </div>
-          <span className="text-xs">
-            {note.created_at !== note.updated_at ? 'Editado' : 'Creado'}
+      {/* Header with title */}
+      <div className="note-card-head">
+        <h3 className="note-card-title">{note.title}</h3>
+        {note.is_private && (
+          <span className="chip-lock">
+            <Icon name="lock" size={12} />
+            Privada
           </span>
-        </div>
+        )}
       </div>
-    </div>
+
+      {/* Summary */}
+      {note.summary && (
+        <p className="note-card-text">
+          {getTextPreview(note.summary, 200)}
+        </p>
+      )}
+
+      {/* Footer with author and date */}
+      <div className="note-card-foot">
+        <strong>{note.author_name || 'Usuario'}</strong>
+        <span>·</span>
+        <span>
+          {note.created_at !== note.updated_at ? 'Editada' : 'Creada'}{' '}
+          {formatDate(note.updated_at).toLowerCase()}
+        </span>
+      </div>
+    </article>
   );
 };
 
