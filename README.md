@@ -13,6 +13,8 @@ Sistema web de gestión de conocimiento personal que permite capturar, organizar
 - **🔐 Autenticación Segura**: Sistema JWT con email/password + **auto-login tras registro**
 - **📎 Archivos Adjuntos**: Sistema completo de gestión de archivos (PDF, Word, Excel, imágenes)
 - **📋 Copia al Portapapeles**: Función para copiar contenido de notas con preservación de formato
+- **🎨 Identidad de Marca**: Sistema de diseño propio (paleta, tipografía, iconos y logo) en escritorio y móvil
+- **📱 Instalable en Móvil**: Se puede añadir a la pantalla de inicio con el isotipo como icono
 
 ## 🔧 Stack Tecnológico
 
@@ -29,6 +31,8 @@ Sistema web de gestión de conocimiento personal que permite capturar, organizar
 - **ReactQuill** para editor WYSIWYG
 - **marked** + **DOMPurify** para convertir y sanitizar Markdown pegado
 - **Axios** para llamadas HTTP
+- **CSS propio** con design tokens en `frontend/src/index.css` (sin Tailwind ni frameworks de UI)
+- **Manrope** (Google Fonts) como tipografía e iconos SVG en línea
 
 ## 📁 Estructura del Proyecto
 
@@ -49,7 +53,9 @@ notes-web/
 │   │   ├── pages/                          # Páginas principales
 │   │   ├── hooks/                          # Hooks personalizados
 │   │   ├── services/                       # Servicios de API
-│   │   └── utils/                          # Utilidades
+│   │   ├── utils/                          # Utilidades
+│   │   └── index.css                       # Sistema de diseño (tokens y estilos)
+│   ├── public/assets/                      # Favicon e iconos de instalación
 │   └── package.json
 ├── railway.json                            # Configuración de Railway
 ├── DEPLOYMENT.md                           # 🚀 Guía completa de despliegue
@@ -189,10 +195,20 @@ PORT=3001
 
 ## 🎨 Características de UX/UI
 
+### Sistema de Diseño
+- **Paleta de marca**: Charcoal `#1F2937` (texto), Slate Blue `#647CA3` (único acento), Warm Gray `#D9D6CE` (líneas) y Light `#F4F5F7` (fondo)
+- **Acento reservado**: un solo botón principal por pantalla; el resto son secundarios o discretos
+- **Contraste**: botones y enlaces usan el acento oscurecido (`#556C93`) para que el texto sea legible
+- **Tipografía**: Manrope, una sola familia con pesos de 400 a 800
+- **Iconos**: SVG de línea en `components/UI/Icon.js`; no se usan emojis como iconos
+- **Logo**: isotipo y wordmark en `components/UI/Logo.js`
+
 ### Diseño Responsivo
 - Diseño adaptativo para mobile y desktop
 - Componentes optimizados para touch
-- Espaciado consistente en todas las páginas
+- Dashboard con rejilla de notas y tags en columna lateral; en móvil, una columna con los tags como chips
+- Login con panel de marca en escritorio y formulario simple en móvil
+- Lectura de notas en columna estrecha con márgenes generosos
 
 ### Búsqueda en Tiempo Real
 - Búsqueda con debounce de 300ms
@@ -254,13 +270,19 @@ PORT=3001
 - **Seguridad**: El HTML generado se sanitiza con DOMPurify
 - **Limitaciones**: Las tablas quedan como texto y las casillas de tareas (`- [ ]`) como viñetas normales
 
+### ✅ Rediseño Visual e Iconos de Instalación
+- **Sistema de diseño**: Paleta de marca, tipografía Manrope e iconos SVG aplicados a todas las pantallas
+- **Pantallas rediseñadas**: Login, dashboard, vista de nota, editor, conexiones, adjuntos e importación
+- **Instalación en móvil**: Iconos con el isotipo para Android (192 y 512 px, más versión adaptable) e iOS, declarados en `manifest.json` e `index.html`
+- **Mejoras de uso**: El modal de importar se cierra al hacer clic fuera y hay un botón "Quitar filtro" al filtrar por tag
+
 ## 🔧 Aprendizajes Técnicos
 
-### Layout y Espaciado
-- **Problema identificado**: `h-screen` con `overflow-auto` limitaba el scroll natural
-- **Solución aplicada**: Cambio a `min-h-screen` permitiendo scroll natural
-- **Técnica utilizada**: Estilos inline para máxima especificidad CSS
-- **Resultado**: Espaciado consistente de 96px en todas las páginas
+### Layout y Estilos
+- **Problema identificado**: Las clases de Tailwind usadas en el código no hacían nada porque Tailwind nunca estuvo instalado
+- **Solución aplicada**: Hoja de estilos única (`frontend/src/index.css`) con variables CSS y clases por componente
+- **Regla**: No usar clases de Tailwind ni estilos inline; reutilizar las clases y variables existentes
+- **Resultado**: Rejilla, modal y espaciado consistentes en todas las páginas
 
 ### Gestión de Archivos
 - **Multer**: Configuración para manejo seguro de uploads
@@ -322,6 +344,6 @@ Desarrollado como sistema personal de gestión de conocimiento con enfoque en pr
 - ✅ Variables de entorno configuradas
 - ✅ Railway integrado
 
-**📅 Última actualización:** 2026-10-01
+**📅 Última actualización:** 2026-10-06
 
-**🔧 Versión actual:** 2.2.0 (con pegado de Markdown)
+**🔧 Versión actual:** 2.3.0 (con rediseño visual e iconos de instalación)
