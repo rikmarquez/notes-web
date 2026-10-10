@@ -194,8 +194,12 @@ const NoteViewPage = () => {
                   dangerouslySetInnerHTML={{ __html: note.content }}
                 />
               </div>
-              {/* Edit button below content - no need to scroll up */}
+              {/* Actions below content - no need to scroll up */}
               <div className="card-footer">
+                <button onClick={handleBack} className="btn btn-secondary">
+                  <Icon name="arrow-left" />
+                  Volver al dashboard
+                </button>
                 <button onClick={handleEdit} className="btn btn-secondary">
                   <Icon name="edit" />
                   Editar esta nota

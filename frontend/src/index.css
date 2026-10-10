@@ -1185,6 +1185,12 @@ mark {
   margin-left: auto;
 }
 
+.note-body .card-footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
 .reflection {
   margin-bottom: 32px;
   padding: 4px 0 4px 24px;
