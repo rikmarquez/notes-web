@@ -59,9 +59,13 @@ notes-web/
 │   │   └── index.css                       # Sistema de diseño (tokens y estilos)
 │   ├── public/assets/                      # Favicon e iconos de instalación
 │   └── package.json
+├── docs/
+│   ├── project-status.md                   # Estado actual y problemas conocidos
+│   ├── technical-specs.md                  # Arquitectura, BD, API, reglas de negocio, despliegue
+│   ├── session-learnings.md                # Decisiones, bugs resueltos, historial
+│   └── protocolo_base.md                   # Protocolo de trabajo
+├── CLAUDE.md                               # Protocolo de inicio de sesión
 ├── railway.json                            # Configuración de Railway
-├── DEPLOYMENT.md                           # 🚀 Guía completa de despliegue
-├── ATTACHMENTS_FEATURE.md                  # 📎 Documentación de archivos adjuntos
 └── README.md
 ```
 
@@ -168,7 +172,7 @@ NODE_ENV=production
 PORT=3001
 ```
 
-**📚 Para más detalles:** Ver [DEPLOYMENT.md](DEPLOYMENT.md)
+**📚 Para más detalles:** Ver [docs/technical-specs.md](docs/technical-specs.md#despliegue-railway)
 
 ## 🔌 API Endpoints
 
